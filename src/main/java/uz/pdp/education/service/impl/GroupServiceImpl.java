@@ -1,9 +1,8 @@
 package uz.pdp.education.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpMethod;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.GroupCreateDTO;
 import uz.pdp.education.dto.ResponseDTO;
@@ -18,6 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GroupServiceImpl implements GroupService {
 
     private final TeacherRepository teacherRepository;
@@ -33,6 +33,7 @@ public class GroupServiceImpl implements GroupService {
                 .createdAt(groupCreateDTO.getCreatedAt())
                 .build();
         groupsRepository.save(group);
+        log.info("Group successfully created");
         return ResponseDTO.<Groups>builder()
                 .code(HttpStatus.OK.value())
                 .message("Group successfully created")
@@ -45,6 +46,7 @@ public class GroupServiceImpl implements GroupService {
     public ResponseDTO<Groups> getGroup(Integer groupId) {
         Groups group = groupsRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + groupId));
+        log.info("Group successfully found");
         return ResponseDTO.<Groups>builder()
                 .code(HttpStatus.OK.value())
                 .message("Group successfully found")
@@ -56,10 +58,20 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public ResponseDTO<List<Groups>> getAllGroup() {
         List<Groups> groups = groupsRepository.findAll();
+        if (!groups.isEmpty()) {
+            log.info("Group successfully created");
+            return ResponseDTO.<List<Groups>>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("Group list successfully created")
+                    .success(true)
+                    .data(groups)
+                    .build();
+        }
+        log.error("Group list not found");
         return ResponseDTO.<List<Groups>>builder()
-                .code(HttpStatus.OK.value())
-                .message("Group list successfully created")
-                .success(true)
+                .code(HttpStatus.NOT_FOUND.value())
+                .message("Group list not found")
+                .success(false)
                 .data(groups)
                 .build();
     }
@@ -71,6 +83,7 @@ public class GroupServiceImpl implements GroupService {
         group.setName(groupCreateDTO.getName());
         group.setUpdatedAt(groupCreateDTO.getUpdatedAt());
         groupsRepository.save(group);
+        log.info("Group successfully updated");
         return ResponseDTO.<Void>builder()
                 .code(HttpStatus.OK.value())
                 .message("Group successfully updated")

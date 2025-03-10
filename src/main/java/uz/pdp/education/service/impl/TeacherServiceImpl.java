@@ -1,8 +1,8 @@
 package uz.pdp.education.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.ErrorDTO;
 import uz.pdp.education.dto.ResponseDTO;
@@ -20,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
@@ -32,6 +33,7 @@ public class TeacherServiceImpl implements TeacherService {
     public ResponseDTO<Teacher> createTeacher(TeacherCreateDTO teacherCreateDTO) {
         List<ErrorDTO> errors = teacherValidation.validate(teacherCreateDTO);
         if (!errors.isEmpty()) {
+            log.error("Teacher validation error");
             return ResponseDTO.<Teacher>builder()
                     .code(HttpStatus.BAD_REQUEST.value())
                     .message("Teacher validation error")
@@ -45,6 +47,7 @@ public class TeacherServiceImpl implements TeacherService {
                 .createdAt(teacherCreateDTO.getCreatedAt())
                 .build();
         teacherRepository.save(teacher);
+        log.info("Teacher successfully created");
         return ResponseDTO.<Teacher>builder()
                 .code(HttpStatus.OK.value())
                 .message("Teacher successfully saved")
@@ -57,6 +60,7 @@ public class TeacherServiceImpl implements TeacherService {
     public ResponseDTO<Teacher> getTeacher(Integer teacherId) {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
+        log.info("Teacher successfully found");
         return ResponseDTO.<Teacher>builder()
                 .code(HttpStatus.OK.value())
                 .message("Teacher successfully found")
@@ -68,9 +72,19 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public ResponseDTO<List<Teacher>> getAllTeacher() {
         List<Teacher> teachers = teacherRepository.findAll();
+        if (!teachers.isEmpty()) {
+            log.info("Teacher list successfully found");
+            return ResponseDTO.<List<Teacher>>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("Teacher list successfully found")
+                    .success(true)
+                    .data(teachers)
+                    .build();
+        }
+        log.error("Teacher list not found");
         return ResponseDTO.<List<Teacher>>builder()
-                .code(HttpStatus.OK.value())
-                .message("Teacher list successfully found")
+                .code(HttpStatus.NOT_FOUND.value())
+                .message("Teacher list not found")
                 .success(true)
                 .data(teachers)
                 .build();
@@ -84,6 +98,7 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setFullName(teacherCreateDTO.getFullName());
         teacher.setUpdatedAt(teacherCreateDTO.getUpdatedAt());
         teacherRepository.save(teacher);
+        log.info("Teacher successfully updated");
         return ResponseDTO.<Void>builder()
                 .code(HttpStatus.OK.value())
                 .message("Teacher successfully updated")
@@ -106,6 +121,7 @@ public class TeacherServiceImpl implements TeacherService {
         groupsRepository.deleteGroupByTeacherId(teacher.getId()); // groups ni ichida teacher ni id si bo'lgani uchun
         studentRepository.deleteStudentByTeacherId(teacher.getId()); // student ni ichida teacher ni id si bo'lgani uchun
         teacherRepository.delete(teacher);
+        log.info("Teacher successfully deleted");
         return ResponseDTO.<Void>builder()
                 .code(HttpStatus.OK.value())
                 .message("Teacher successfully deleted")
