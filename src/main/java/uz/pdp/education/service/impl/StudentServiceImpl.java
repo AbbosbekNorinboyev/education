@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import uz.pdp.education.dto.ErrorDTO;
 import uz.pdp.education.dto.ResponseDTO;
 import uz.pdp.education.dto.StudentCreateDTO;
 import uz.pdp.education.entity.Student;
@@ -15,7 +14,6 @@ import uz.pdp.education.repository.StudentRepository;
 import uz.pdp.education.repository.SubjectRepository;
 import uz.pdp.education.repository.TeacherRepository;
 import uz.pdp.education.service.StudentService;
-import uz.pdp.education.validation.StudentValidation;
 
 import java.util.List;
 
@@ -23,11 +21,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class StudentServiceImpl implements StudentService {
-
     private final TeacherRepository teacherRepository;
     private final SubjectRepository subjectRepository;
     private final StudentRepository studentRepository;
-    private final StudentValidation studentValidation;
 
     @Override
     public ResponseDTO<Student> createStudent(StudentCreateDTO studentCreateDTO,
@@ -37,15 +33,6 @@ public class StudentServiceImpl implements StudentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectId));
-        List<ErrorDTO> errors = studentValidation.validate(studentCreateDTO);
-        if (!errors.isEmpty()) {
-            return ResponseDTO.<Student>builder()
-                    .code(HttpStatus.BAD_REQUEST.value())
-                    .message("Student validation error")
-                    .success(false)
-                    .errors(errors)
-                    .build();
-        }
         Student student = Student.builder()
                 .age(studentCreateDTO.getAge())
                 .fullName(studentCreateDTO.getFullName())

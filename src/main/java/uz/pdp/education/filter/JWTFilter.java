@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import uz.pdp.education.security.CustomUserDetailsService;
+import uz.pdp.education.config.CustomUserDetailsService;
 import uz.pdp.education.utils.JWTUtil;
 
 import java.io.IOException;

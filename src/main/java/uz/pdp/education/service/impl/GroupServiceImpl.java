@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class GroupServiceImpl implements GroupService {
-
     private final TeacherRepository teacherRepository;
     private final GroupsRepository groupsRepository;
 

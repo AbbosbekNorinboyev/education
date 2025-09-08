@@ -13,7 +13,7 @@ import uz.pdp.education.dto.RegisterRequest;
 import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.enums.Role;
 import uz.pdp.education.repository.AuthUserRepository;
-import uz.pdp.education.security.CustomUserDetailsService;
+import uz.pdp.education.config.CustomUserDetailsService;
 import uz.pdp.education.utils.JWTUtil;
 
 import java.util.Optional;
@@ -22,7 +22,6 @@ import java.util.Optional;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class AuthUserController {
-
     private final AuthUserRepository authUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;

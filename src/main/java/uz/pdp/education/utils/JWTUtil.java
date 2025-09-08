@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import uz.pdp.education.security.CustomUserDetailsService;
+import uz.pdp.education.config.CustomUserDetailsService;
 
 import java.util.Date;
 import java.util.HashMap;

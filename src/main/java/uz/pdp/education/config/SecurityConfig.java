@@ -1,4 +1,4 @@
-package uz.pdp.education.security;
+package uz.pdp.education.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class SubjectServiceImpl implements SubjectService {
-
     private final SubjectRepository subjectRepository;
     private final TeacherRepository teacherRepository;
 

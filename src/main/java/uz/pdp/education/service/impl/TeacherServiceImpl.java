@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import uz.pdp.education.dto.ErrorDTO;
 import uz.pdp.education.dto.ResponseDTO;
 import uz.pdp.education.dto.TeacherCreateDTO;
 import uz.pdp.education.entity.Teacher;
@@ -14,7 +13,6 @@ import uz.pdp.education.repository.StudentRepository;
 import uz.pdp.education.repository.SubjectRepository;
 import uz.pdp.education.repository.TeacherRepository;
 import uz.pdp.education.service.TeacherService;
-import uz.pdp.education.validation.TeacherValidation;
 
 import java.util.List;
 
@@ -22,25 +20,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class TeacherServiceImpl implements TeacherService {
-
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final GroupsRepository groupsRepository;
     private final SubjectRepository subjectRepository;
-    private final TeacherValidation teacherValidation;
 
     @Override
     public ResponseDTO<Teacher> createTeacher(TeacherCreateDTO teacherCreateDTO) {
-        List<ErrorDTO> errors = teacherValidation.validate(teacherCreateDTO);
-        if (!errors.isEmpty()) {
-            log.error("Teacher validation error");
-            return ResponseDTO.<Teacher>builder()
-                    .code(HttpStatus.BAD_REQUEST.value())
-                    .message("Teacher validation error")
-                    .success(false)
-                    .errors(errors)
-                    .build();
-        }
         Teacher teacher = Teacher.builder()
                 .fullName(teacherCreateDTO.getFullName())
                 .age(teacherCreateDTO.getAge())

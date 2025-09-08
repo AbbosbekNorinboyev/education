@@ -1,4 +1,4 @@
-package uz.pdp.education.security;
+package uz.pdp.education.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +17,6 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-
     private final AuthUserRepository authUserRepository;
 
     @Override
