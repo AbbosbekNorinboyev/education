@@ -46,15 +46,10 @@ public class SecurityConfig {
                                     "/api/users/**",
                                     "/webjars/**").permitAll()
                             .requestMatchers(
-                                    "/api/teachers/create",
-                                    "/api/teachers/update",
-                                    "/api/teachers/delete",
-                                    "/api/students/create",
-                                    "/api/students/update",
-                                    "/api/subjects/create",
-                                    "/api/subjects/update",
-                                    "/api/groups/create",
-                                    "/api/groups/update").hasRole("ADMIN")
+                                    "/api/teachers/**",
+                                    "/api/students/**",
+                                    "/api/subjects/**",
+                                    "/api/groups/**").hasRole("ADMIN")
                             .anyRequest().authenticated();
                 })
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)

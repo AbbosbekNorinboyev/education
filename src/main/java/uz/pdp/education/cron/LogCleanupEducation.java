@@ -13,7 +13,7 @@ import java.nio.file.StandardOpenOption;
 @Component
 public class LogCleanupEducation {
     private static final Logger logger = LoggerFactory.getLogger(LogCleanupEducation.class);
-    private static final String LOG_PATH = "C:\\Abbos\\Spring Project\\Test Projects\\EducationApp\\logs\\EducationLog.log";
+    private static final String LOG_PATH = "C:\\Abbos\\Spring Project\\Test Projects\\education\\logs\\EducationLog.log";
 
     @Scheduled(cron = "* */10 * * * *") // har 10 minutda ishlaydi
     public void clearLogFile() {
