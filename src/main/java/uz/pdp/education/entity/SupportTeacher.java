@@ -5,15 +5,13 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
-@Entity
+@Data
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
-@Table(name = "teacher")
-public class Teacher extends BaseEntity {
+@Builder
+@Entity
+@Table(name = "support_teacher")
+public class SupportTeacher extends BaseEntity {
     private String fullName;
-    private int age;
+    private String phoneNumber;
 }

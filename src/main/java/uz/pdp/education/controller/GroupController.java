@@ -17,23 +17,23 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping("/create")
-    public Response<Groups> createGroup(@Valid @RequestBody GroupDto groupDto,
+    public Response<?> createGroup(@Valid @RequestBody GroupDto groupDto,
                                         @RequestParam Integer teacherId) {
         return groupService.createGroup(groupDto, teacherId);
     }
 
     @GetMapping("/get")
-    public Response<Groups> getGroup(@RequestParam Integer groupId) {
+    public Response<?> getGroup(@RequestParam Integer groupId) {
         return groupService.getGroup(groupId);
     }
 
     @GetMapping("/getAll")
-    public Response<List<Groups>> getAllGroup() {
+    public Response<?> getAllGroup() {
         return groupService.getAllGroup();
     }
 
     @PutMapping("/update")
-    public Response<Void> updateGroup(@RequestBody GroupDto groupDto,
+    public Response<?> updateGroup(@RequestBody GroupDto groupDto,
                                       @RequestParam Integer groupId) {
         return groupService.updateGroup(groupDto, groupId);
     }

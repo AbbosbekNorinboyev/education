@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
 @Builder
@@ -12,14 +15,17 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class Subject {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@Table(name = "subject")
+public class Subject extends BaseEntity {
     private String name;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "teacher_id")
-    private Teacher teacher;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Double price;
+
+    // fandan dars otadigan oqituvchilar
+    @ManyToMany
+    @JoinTable(
+            name = "teacherr_subject",
+            joinColumns = @JoinColumn(name = "subject_id"),
+            inverseJoinColumns = @JoinColumn(name = "teacher_id")
+    )
+    private Set<Teacher> teachers = new HashSet<>();
 }

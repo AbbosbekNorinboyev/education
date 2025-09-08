@@ -4,10 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.dto.TeacherDto;
+import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.Teacher;
 import uz.pdp.education.exception.ResourceNotFoundException;
+import uz.pdp.education.mapper.TeacherMapper;
 import uz.pdp.education.repository.GroupsRepository;
 import uz.pdp.education.repository.StudentRepository;
 import uz.pdp.education.repository.SubjectRepository;
@@ -24,73 +25,66 @@ public class TeacherServiceImpl implements TeacherService {
     private final StudentRepository studentRepository;
     private final GroupsRepository groupsRepository;
     private final SubjectRepository subjectRepository;
+    private final TeacherMapper teacherMapper;
 
     @Override
-    public Response<Teacher> createTeacher(TeacherDto teacherDto) {
-        Teacher teacher = Teacher.builder()
-                .fullName(teacherDto.getFullName())
-                .age(teacherDto.getAge())
-                .createdAt(teacherDto.getCreatedAt())
-                .build();
+    public Response<?> createTeacher(TeacherDto teacherDto) {
+        Teacher teacher = teacherMapper.toEntity(teacherDto);
         teacherRepository.save(teacher);
         log.info("Teacher successfully created");
-        return Response.<Teacher>builder()
+        return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Teacher successfully saved")
                 .success(true)
-                .data(teacher)
+                .data(teacherMapper.toDto(teacher))
                 .build();
     }
 
     @Override
-    public Response<Teacher> getTeacher(Integer teacherId) {
+    public Response<?> getTeacher(Integer teacherId) {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
         log.info("Teacher successfully found");
-        return Response.<Teacher>builder()
+        return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Teacher successfully found")
                 .success(true)
-                .data(teacher)
+                .data(teacherMapper.toDto(teacher))
                 .build();
     }
 
     @Override
-    public Response<List<Teacher>> getAllTeacher() {
+    public Response<?> getAllTeacher() {
         List<Teacher> teachers = teacherRepository.findAll();
         if (!teachers.isEmpty()) {
             log.info("Teacher list successfully found");
-            return Response.<List<Teacher>>builder()
+            return Response.builder()
                     .code(HttpStatus.OK.value())
                     .message("Teacher list successfully found")
                     .success(true)
-                    .data(teachers)
+                    .data(teacherMapper.dtoList(teachers))
                     .build();
         }
         log.error("Teacher list not found");
-        return Response.<List<Teacher>>builder()
+        return Response.builder()
                 .code(HttpStatus.NOT_FOUND.value())
                 .message("Teacher list not found")
-                .success(true)
-                .data(teachers)
+                .success(false)
                 .build();
     }
 
     @Override
-    public Response<Void> updateTeacher(TeacherDto teacherDto, Integer teacherId) {
-        Teacher teacher = teacherRepository.findById(teacherId)
-                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
-        teacher.setAge(teacherDto.getAge());
-        teacher.setFullName(teacherDto.getFullName());
-        teacher.setUpdatedAt(teacherDto.getUpdatedAt());
+    public Response<?> updateTeacher(TeacherDto teacherDto) {
+        Teacher teacher = teacherRepository.findById(Math.toIntExact(teacherDto.getId()))
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherDto.getId()));
+        teacherMapper.update(teacher, teacherDto);
         teacherRepository.save(teacher);
         log.info("Teacher successfully updated");
-        return Response.<Void>builder()
+        return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Teacher successfully updated")
                 .success(true)
                 .build();
-
     }
 
     /**
@@ -100,15 +94,15 @@ public class TeacherServiceImpl implements TeacherService {
      * @return
      */
     @Override
-    public Response<Void> deleteTeacher(Integer teacherId) {
+    public Response<?> deleteTeacher(Integer teacherId) {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
-        subjectRepository.deleteSubjectByTeacherId(teacher.getId()); // subject ni ichida teacher ni id si bo'lgani uchun
-        groupsRepository.deleteGroupByTeacherId(teacher.getId()); // groups ni ichida teacher ni id si bo'lgani uchun
-        studentRepository.deleteStudentByTeacherId(teacher.getId()); // student ni ichida teacher ni id si bo'lgani uchun
+        subjectRepository.deleteSubjectByTeacherId(Math.toIntExact(teacher.getId())); // subject ni ichida teacher ni id si bo'lgani uchun
+        groupsRepository.deleteGroupByTeacherId(Math.toIntExact(teacher.getId())); // groups ni ichida teacher ni id si bo'lgani uchun
+        studentRepository.deleteStudentByTeacherId(Math.toIntExact(teacher.getId())); // student ni ichida teacher ni id si bo'lgani uchun
         teacherRepository.delete(teacher);
         log.info("Teacher successfully deleted");
-        return Response.<Void>builder()
+        return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Teacher successfully deleted")
                 .success(true)

@@ -9,11 +9,14 @@ import uz.pdp.education.dto.SubjectDto;
 import uz.pdp.education.entity.Subject;
 import uz.pdp.education.entity.Teacher;
 import uz.pdp.education.exception.ResourceNotFoundException;
+import uz.pdp.education.mapper.SubjectMapper;
 import uz.pdp.education.repository.SubjectRepository;
 import uz.pdp.education.repository.TeacherRepository;
 import uz.pdp.education.service.SubjectService;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -21,69 +24,64 @@ import java.util.List;
 public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
     private final TeacherRepository teacherRepository;
+    private final SubjectMapper subjectMapper;
 
     @Override
-    public Response<Subject> createSubject(SubjectDto subjectDto, Integer teacherId) {
-        Teacher teacher = teacherRepository.findById(teacherId)
-                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
-        Subject subject = Subject.builder()
-                .name(subjectDto.getName())
-                .teacher(teacher)
-                .createdAt(subjectDto.getCreatedAt())
-                .build();
+    public Response<?> createSubject(SubjectDto subjectDto, Integer teacherId) {
+        Set<Teacher> teachers = new HashSet<>(teacherRepository.findAll());
+        Subject subject = subjectMapper.toEntity(subjectDto);
+        subject.setTeachers(teachers);
         subjectRepository.save(subject);
         log.info("Subject successfully created");
-        return Response.<Subject>builder()
+        return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Subject successfully saved")
                 .success(true)
-                .data(subject)
+                .data(subjectMapper.toDto(subject))
                 .build();
     }
 
     @Override
-    public Response<Subject> getSubject(Integer subjectId) {
-        Subject subject = subjectRepository.findById(subjectId)
+    public Response<?> getSubject(Long subjectId) {
+        Subject subject = subjectRepository.findById(Math.toIntExact(subjectId))
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectId));
         log.info("Subject successfully found");
-        return Response.<Subject>builder()
+        return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Subject successfully found")
                 .success(true)
-                .data(subject)
+                .data(subjectMapper.toDto(subject))
                 .build();
     }
 
     @Override
-    public Response<List<Subject>> getAllSubject() {
+    public Response<?> getAllSubject() {
         List<Subject> subjects = subjectRepository.findAll();
         if (!subjects.isEmpty()) {
             log.info("Subject list successfully found");
-            return Response.<List<Subject>>builder()
+            return Response.builder()
                     .code(HttpStatus.OK.value())
                     .message("Subject list successfully found")
                     .success(true)
-                    .data(subjects)
+                    .data(subjectMapper.dtoList(subjects))
                     .build();
         }
         log.error("Subject list not found");
-        return Response.<List<Subject>>builder()
+        return Response.builder()
                 .code(HttpStatus.NOT_FOUND.value())
                 .message("Subject list not found")
                 .success(false)
-                .data(subjects)
                 .build();
     }
 
     @Override
-    public Response<Void> updateSubject(SubjectDto subjectDto, Integer subjectId) {
-        Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectId));
-        subject.setName(subjectDto.getName());
-        subject.setUpdatedAt(subjectDto.getUpdatedAt());
+    public Response<?> updateSubject(SubjectDto subjectDto) {
+        Subject subject = subjectRepository.findById(Math.toIntExact(subjectDto.getId()))
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectDto.getId()));
+        subjectMapper.update(subject, subjectDto);
         subjectRepository.save(subject);
         log.info("Subject successfully updated");
-        return Response.<Void>builder()
+        return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Subject successfully updated")
                 .success(true)

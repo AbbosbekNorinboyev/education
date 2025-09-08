@@ -7,83 +7,87 @@ import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.GroupDto;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.Groups;
+import uz.pdp.education.entity.SupportTeacher;
 import uz.pdp.education.entity.Teacher;
 import uz.pdp.education.exception.ResourceNotFoundException;
+import uz.pdp.education.mapper.GroupMapper;
 import uz.pdp.education.repository.GroupsRepository;
+import uz.pdp.education.repository.SupportTeacherRepository;
 import uz.pdp.education.repository.TeacherRepository;
 import uz.pdp.education.service.GroupService;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class GroupServiceImpl implements GroupService {
+    private final SupportTeacherRepository supportTeacherRepository;
     private final TeacherRepository teacherRepository;
     private final GroupsRepository groupsRepository;
+    private final GroupMapper groupMapper;
 
     @Override
-    public Response<Groups> createGroup(GroupDto groupDto, Integer teacherId) {
+    public Response<?> createGroup(GroupDto groupDto, Integer teacherId) {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
-        Groups group = Groups.builder()
-                .name(groupDto.getName())
-                .teacher(teacher)
-                .createdAt(groupDto.getCreatedAt())
-                .build();
+        Set<SupportTeacher> supportTeachers = new HashSet<>(supportTeacherRepository.findAll());
+        Groups group = groupMapper.toEntity(groupDto);
+        group.setTeacher(teacher);
+        group.setSupports(supportTeachers);
         groupsRepository.save(group);
         log.info("Group successfully created");
-        return Response.<Groups>builder()
+        return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Group successfully created")
                 .success(true)
-                .data(group)
+                .data(groupMapper.toDto(group))
                 .build();
     }
 
     @Override
-    public Response<Groups> getGroup(Integer groupId) {
+    public Response<?> getGroup(Integer groupId) {
         Groups group = groupsRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + groupId));
         log.info("Group successfully found");
-        return Response.<Groups>builder()
+        return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Group successfully found")
                 .success(true)
-                .data(group)
+                .data(groupMapper.toDto(group))
                 .build();
     }
 
     @Override
-    public Response<List<Groups>> getAllGroup() {
+    public Response<?> getAllGroup() {
         List<Groups> groups = groupsRepository.findAll();
         if (!groups.isEmpty()) {
             log.info("Group successfully created");
-            return Response.<List<Groups>>builder()
+            return Response.builder()
                     .code(HttpStatus.OK.value())
                     .message("Group list successfully created")
                     .success(true)
-                    .data(groups)
+                    .data(groupMapper.dtoList(groups))
                     .build();
         }
         log.error("Group list not found");
-        return Response.<List<Groups>>builder()
+        return Response.builder()
                 .code(HttpStatus.NOT_FOUND.value())
                 .message("Group list not found")
                 .success(false)
-                .data(groups)
                 .build();
     }
 
     @Override
-    public Response<Void> updateGroup(GroupDto groupDto, Integer groupId) {
+    public Response<?> updateGroup(GroupDto groupDto, Integer groupId) {
         Groups group = groupsRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + groupId));
-        group.setName(groupDto.getName());
-        group.setUpdatedAt(groupDto.getUpdatedAt());
+        groupMapper.update(group, groupDto);
         groupsRepository.save(group);
         log.info("Group successfully updated");
-        return Response.<Void>builder()
+        return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Group successfully updated")
                 .success(true)

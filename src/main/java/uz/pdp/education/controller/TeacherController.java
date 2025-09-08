@@ -5,40 +5,36 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.education.dto.TeacherDto;
 import uz.pdp.education.dto.response.Response;
-import uz.pdp.education.entity.Teacher;
-import uz.pdp.education.service.impl.TeacherServiceImpl;
-
-import java.util.List;
+import uz.pdp.education.service.TeacherService;
 
 @RestController
 @RequestMapping("/api/teachers")
 @RequiredArgsConstructor
 public class TeacherController {
-    private final TeacherServiceImpl teacherService;
+    private final TeacherService teacherService;
 
     @PostMapping("/create")
-    public Response<Teacher> createTeacher(@RequestBody @Valid TeacherDto teacherDto) {
+    public Response<?> createTeacher(@RequestBody @Valid TeacherDto teacherDto) {
         return teacherService.createTeacher(teacherDto);
     }
 
     @GetMapping("/get")
-    public Response<Teacher> getTeacher(@RequestParam Integer teacherId) {
+    public Response<?> getTeacher(@RequestParam Integer teacherId) {
         return teacherService.getTeacher(teacherId);
     }
 
     @GetMapping("/getAll")
-    public Response<List<Teacher>> getAllTeacher() {
+    public Response<?> getAllTeacher() {
         return teacherService.getAllTeacher();
     }
 
     @PutMapping("/update")
-    public Response<Void> updateTeacher(@RequestBody TeacherDto teacherDto,
-                                        @RequestParam Integer teacherId) {
-        return teacherService.updateTeacher(teacherDto, teacherId);
+    public Response<?> updateTeacher(@RequestBody TeacherDto teacherDto) {
+        return teacherService.updateTeacher(teacherDto);
     }
 
     @DeleteMapping("/delete")
-    public Response<Void> deleteTeacher(@RequestParam Integer teacherId) {
+    public Response<?> deleteTeacher(@RequestParam Integer teacherId) {
         return teacherService.deleteTeacher(teacherId);
     }
 }

@@ -3,7 +3,7 @@ package uz.pdp.education.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
 @Builder
@@ -11,10 +11,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class Student {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@Table(name = "student")
+public class Student extends BaseEntity {
     private String fullName;
     private int age;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -23,6 +21,4 @@ public class Student {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "subject_id")
     private Subject subject;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

@@ -12,9 +12,11 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class StudentDto {
+    private Long id;
     @NotBlank(message = "fullName can not be null or empty")
     private String fullName;
     private int age;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long createdBy;
 }
