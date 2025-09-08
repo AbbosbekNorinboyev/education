@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import uz.pdp.education.dto.ResponseDTO;
-import uz.pdp.education.dto.SubjectCreateDTO;
+import uz.pdp.education.dto.response.Response;
+import uz.pdp.education.dto.SubjectDto;
 import uz.pdp.education.entity.Subject;
 import uz.pdp.education.entity.Teacher;
 import uz.pdp.education.exception.ResourceNotFoundException;
@@ -23,17 +23,17 @@ public class SubjectServiceImpl implements SubjectService {
     private final TeacherRepository teacherRepository;
 
     @Override
-    public ResponseDTO<Subject> createSubject(SubjectCreateDTO subjectCreateDTO, Integer teacherId) {
+    public Response<Subject> createSubject(SubjectDto subjectDto, Integer teacherId) {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
         Subject subject = Subject.builder()
-                .name(subjectCreateDTO.getName())
+                .name(subjectDto.getName())
                 .teacher(teacher)
-                .createdAt(subjectCreateDTO.getCreatedAt())
+                .createdAt(subjectDto.getCreatedAt())
                 .build();
         subjectRepository.save(subject);
         log.info("Subject successfully created");
-        return ResponseDTO.<Subject>builder()
+        return Response.<Subject>builder()
                 .code(HttpStatus.OK.value())
                 .message("Subject successfully saved")
                 .success(true)
@@ -42,11 +42,11 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public ResponseDTO<Subject> getSubject(Integer subjectId) {
+    public Response<Subject> getSubject(Integer subjectId) {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectId));
         log.info("Subject successfully found");
-        return ResponseDTO.<Subject>builder()
+        return Response.<Subject>builder()
                 .code(HttpStatus.OK.value())
                 .message("Subject successfully found")
                 .success(true)
@@ -55,11 +55,11 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public ResponseDTO<List<Subject>> getAllSubject() {
+    public Response<List<Subject>> getAllSubject() {
         List<Subject> subjects = subjectRepository.findAll();
         if (!subjects.isEmpty()) {
             log.info("Subject list successfully found");
-            return ResponseDTO.<List<Subject>>builder()
+            return Response.<List<Subject>>builder()
                     .code(HttpStatus.OK.value())
                     .message("Subject list successfully found")
                     .success(true)
@@ -67,7 +67,7 @@ public class SubjectServiceImpl implements SubjectService {
                     .build();
         }
         log.error("Subject list not found");
-        return ResponseDTO.<List<Subject>>builder()
+        return Response.<List<Subject>>builder()
                 .code(HttpStatus.NOT_FOUND.value())
                 .message("Subject list not found")
                 .success(false)
@@ -76,14 +76,14 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public ResponseDTO<Void> updateSubject(SubjectCreateDTO subjectCreateDTO, Integer subjectId) {
+    public Response<Void> updateSubject(SubjectDto subjectDto, Integer subjectId) {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectId));
-        subject.setName(subjectCreateDTO.getName());
-        subject.setUpdatedAt(subjectCreateDTO.getUpdatedAt());
+        subject.setName(subjectDto.getName());
+        subject.setUpdatedAt(subjectDto.getUpdatedAt());
         subjectRepository.save(subject);
         log.info("Subject successfully updated");
-        return ResponseDTO.<Void>builder()
+        return Response.<Void>builder()
                 .code(HttpStatus.OK.value())
                 .message("Subject successfully updated")
                 .success(true)

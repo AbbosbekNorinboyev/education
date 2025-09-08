@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import uz.pdp.education.dto.GroupCreateDTO;
-import uz.pdp.education.dto.ResponseDTO;
+import uz.pdp.education.dto.GroupDto;
+import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.Groups;
 import uz.pdp.education.entity.Teacher;
 import uz.pdp.education.exception.ResourceNotFoundException;
@@ -23,17 +23,17 @@ public class GroupServiceImpl implements GroupService {
     private final GroupsRepository groupsRepository;
 
     @Override
-    public ResponseDTO<Groups> createGroup(GroupCreateDTO groupCreateDTO, Integer teacherId) {
+    public Response<Groups> createGroup(GroupDto groupDto, Integer teacherId) {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
         Groups group = Groups.builder()
-                .name(groupCreateDTO.getName())
+                .name(groupDto.getName())
                 .teacher(teacher)
-                .createdAt(groupCreateDTO.getCreatedAt())
+                .createdAt(groupDto.getCreatedAt())
                 .build();
         groupsRepository.save(group);
         log.info("Group successfully created");
-        return ResponseDTO.<Groups>builder()
+        return Response.<Groups>builder()
                 .code(HttpStatus.OK.value())
                 .message("Group successfully created")
                 .success(true)
@@ -42,11 +42,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public ResponseDTO<Groups> getGroup(Integer groupId) {
+    public Response<Groups> getGroup(Integer groupId) {
         Groups group = groupsRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + groupId));
         log.info("Group successfully found");
-        return ResponseDTO.<Groups>builder()
+        return Response.<Groups>builder()
                 .code(HttpStatus.OK.value())
                 .message("Group successfully found")
                 .success(true)
@@ -55,11 +55,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public ResponseDTO<List<Groups>> getAllGroup() {
+    public Response<List<Groups>> getAllGroup() {
         List<Groups> groups = groupsRepository.findAll();
         if (!groups.isEmpty()) {
             log.info("Group successfully created");
-            return ResponseDTO.<List<Groups>>builder()
+            return Response.<List<Groups>>builder()
                     .code(HttpStatus.OK.value())
                     .message("Group list successfully created")
                     .success(true)
@@ -67,7 +67,7 @@ public class GroupServiceImpl implements GroupService {
                     .build();
         }
         log.error("Group list not found");
-        return ResponseDTO.<List<Groups>>builder()
+        return Response.<List<Groups>>builder()
                 .code(HttpStatus.NOT_FOUND.value())
                 .message("Group list not found")
                 .success(false)
@@ -76,14 +76,14 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public ResponseDTO<Void> updateGroup(GroupCreateDTO groupCreateDTO, Integer groupId) {
+    public Response<Void> updateGroup(GroupDto groupDto, Integer groupId) {
         Groups group = groupsRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + groupId));
-        group.setName(groupCreateDTO.getName());
-        group.setUpdatedAt(groupCreateDTO.getUpdatedAt());
+        group.setName(groupDto.getName());
+        group.setUpdatedAt(groupDto.getUpdatedAt());
         groupsRepository.save(group);
         log.info("Group successfully updated");
-        return ResponseDTO.<Void>builder()
+        return Response.<Void>builder()
                 .code(HttpStatus.OK.value())
                 .message("Group successfully updated")
                 .success(true)

@@ -1,19 +1,19 @@
 package uz.pdp.education.service;
 
-import uz.pdp.education.dto.ResponseDTO;
-import uz.pdp.education.dto.TeacherCreateDTO;
+import uz.pdp.education.dto.response.Response;
+import uz.pdp.education.dto.TeacherDto;
 import uz.pdp.education.entity.Teacher;
 
 import java.util.List;
 
 public interface TeacherService {
-    ResponseDTO<Teacher> createTeacher(TeacherCreateDTO teacherCreateDTO);
+    Response<Teacher> createTeacher(TeacherDto teacherDto);
 
-    ResponseDTO<Teacher> getTeacher(Integer teacherId);
+    Response<Teacher> getTeacher(Integer teacherId);
 
-    ResponseDTO<List<Teacher>> getAllTeacher();
+    Response<List<Teacher>> getAllTeacher();
 
-    ResponseDTO<Void> updateTeacher(TeacherCreateDTO teacherCreateDTO, Integer teacherId);
+    Response<Void> updateTeacher(TeacherDto teacherDto, Integer teacherId);
 
-    ResponseDTO<Void> deleteTeacher(Integer teacherId);
+    Response<Void> deleteTeacher(Integer teacherId);
 }

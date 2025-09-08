@@ -1,6 +1,5 @@
 package uz.pdp.education.exception;
 
-import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 

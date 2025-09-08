@@ -44,18 +44,16 @@ public class SecurityConfig {
                                     "/swagger-ui.html",
                                     "/v3/api-docs/**",
                                     "/api/users/**",
-                                    "/webjars/**").permitAll()
-                            .requestMatchers(
+                                    "/webjars/**",
                                     "/api/teachers/**",
                                     "/api/students/**",
                                     "/api/subjects/**",
-                                    "/api/groups/**").hasRole("ADMIN")
+                                    "/api/groups/**")
+                            .permitAll()
                             .anyRequest().authenticated();
                 })
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
-                .sessionManagement(sessionManagementConfigurer -> {
-                    sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                })
+                .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

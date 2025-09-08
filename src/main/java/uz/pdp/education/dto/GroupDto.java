@@ -1,10 +1,7 @@
 package uz.pdp.education.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import uz.pdp.education.entity.Subject;
-import uz.pdp.education.entity.Teacher;
 
 import java.time.LocalDateTime;
 
@@ -14,10 +11,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class StudentCreateDTO {
-    @NotBlank(message = "fullName can not be null or empty")
-    private String fullName;
-    private int age;
+public class GroupDto {
+    @NotBlank(message = "name can be null or empty")
+    private String name;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

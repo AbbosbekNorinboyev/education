@@ -1,9 +1,10 @@
 package uz.pdp.education.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.education.dto.ResponseDTO;
-import uz.pdp.education.dto.SubjectCreateDTO;
+import uz.pdp.education.dto.SubjectDto;
+import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.Subject;
 import uz.pdp.education.service.SubjectService;
 
@@ -16,24 +17,24 @@ public class SubjectController {
     private final SubjectService subjectService;
 
     @PostMapping("/create")
-    public ResponseDTO<Subject> createSubject(@RequestBody SubjectCreateDTO subjectCreateDTO,
-                                              @RequestParam Integer teacherId) {
-        return subjectService.createSubject(subjectCreateDTO, teacherId);
+    public Response<Subject> createSubject(@Valid @RequestBody SubjectDto subjectDto,
+                                           @RequestParam Integer teacherId) {
+        return subjectService.createSubject(subjectDto, teacherId);
     }
 
-    @GetMapping("/{subjectId}")
-    public ResponseDTO<Subject> getSubject(@PathVariable Integer subjectId) {
+    @GetMapping("/get")
+    public Response<Subject> getSubject(@RequestParam Integer subjectId) {
         return subjectService.getSubject(subjectId);
     }
 
-    @GetMapping
-    public ResponseDTO<List<Subject>> getAllSubject() {
+    @GetMapping("/getAll")
+    public Response<List<Subject>> getAllSubject() {
         return subjectService.getAllSubject();
     }
 
-    @PutMapping("/update/{subjectId}")
-    public ResponseDTO<Void> updateSubject(@RequestBody SubjectCreateDTO subjectCreateDTO,
-                                           @PathVariable Integer subjectId) {
-        return subjectService.updateSubject(subjectCreateDTO, subjectId);
+    @PutMapping("/update")
+    public Response<Void> updateSubject(@RequestBody SubjectDto subjectDto,
+                                        @RequestParam Integer subjectId) {
+        return subjectService.updateSubject(subjectDto, subjectId);
     }
 }

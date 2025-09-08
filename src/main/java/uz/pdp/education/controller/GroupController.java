@@ -1,11 +1,12 @@
 package uz.pdp.education.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.education.dto.GroupCreateDTO;
-import uz.pdp.education.dto.ResponseDTO;
+import uz.pdp.education.dto.GroupDto;
+import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.Groups;
-import uz.pdp.education.service.impl.GroupServiceImpl;
+import uz.pdp.education.service.GroupService;
 
 import java.util.List;
 
@@ -13,27 +14,27 @@ import java.util.List;
 @RequestMapping("/api/groups")
 @RequiredArgsConstructor
 public class GroupController {
-    private final GroupServiceImpl groupService;
+    private final GroupService groupService;
 
     @PostMapping("/create")
-    public ResponseDTO<Groups> createGroup(@RequestBody GroupCreateDTO groupCreateDTO,
-                                           @RequestParam Integer teacherId) {
-        return groupService.createGroup(groupCreateDTO, teacherId);
+    public Response<Groups> createGroup(@Valid @RequestBody GroupDto groupDto,
+                                        @RequestParam Integer teacherId) {
+        return groupService.createGroup(groupDto, teacherId);
     }
 
-    @GetMapping("/{groupId}")
-    public ResponseDTO<Groups> getGroup(@PathVariable Integer groupId) {
+    @GetMapping("/get")
+    public Response<Groups> getGroup(@RequestParam Integer groupId) {
         return groupService.getGroup(groupId);
     }
 
-    @GetMapping
-    public ResponseDTO<List<Groups>> getAllGroup() {
+    @GetMapping("/getAll")
+    public Response<List<Groups>> getAllGroup() {
         return groupService.getAllGroup();
     }
 
-    @PutMapping("/update/{groupId}")
-    public ResponseDTO<Void> updateGroup(@RequestBody GroupCreateDTO groupCreateDTO,
-                                         @PathVariable Integer groupId) {
-        return groupService.updateGroup(groupCreateDTO, groupId);
+    @PutMapping("/update")
+    public Response<Void> updateGroup(@RequestBody GroupDto groupDto,
+                                      @RequestParam Integer groupId) {
+        return groupService.updateGroup(groupDto, groupId);
     }
 }

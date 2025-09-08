@@ -3,8 +3,8 @@ package uz.pdp.education.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.education.dto.ResponseDTO;
-import uz.pdp.education.dto.TeacherCreateDTO;
+import uz.pdp.education.dto.TeacherDto;
+import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.Teacher;
 import uz.pdp.education.service.impl.TeacherServiceImpl;
 
@@ -17,28 +17,28 @@ public class TeacherController {
     private final TeacherServiceImpl teacherService;
 
     @PostMapping("/create")
-    public ResponseDTO<Teacher> createTeacher(@RequestBody @Valid TeacherCreateDTO teacherCreateDTO) {
-        return teacherService.createTeacher(teacherCreateDTO);
+    public Response<Teacher> createTeacher(@RequestBody @Valid TeacherDto teacherDto) {
+        return teacherService.createTeacher(teacherDto);
     }
 
-    @GetMapping("/{teacherId}")
-    public ResponseDTO<Teacher> getTeacher(@PathVariable Integer teacherId) {
+    @GetMapping("/get")
+    public Response<Teacher> getTeacher(@RequestParam Integer teacherId) {
         return teacherService.getTeacher(teacherId);
     }
 
-    @GetMapping
-    public ResponseDTO<List<Teacher>> getAllTeacher() {
+    @GetMapping("/getAll")
+    public Response<List<Teacher>> getAllTeacher() {
         return teacherService.getAllTeacher();
     }
 
-    @PutMapping("/update/{teacherId}")
-    public ResponseDTO<Void> updateTeacher(@RequestBody TeacherCreateDTO teacherCreateDTO,
-                                           @PathVariable Integer teacherId) {
-        return teacherService.updateTeacher(teacherCreateDTO, teacherId);
+    @PutMapping("/update")
+    public Response<Void> updateTeacher(@RequestBody TeacherDto teacherDto,
+                                        @RequestParam Integer teacherId) {
+        return teacherService.updateTeacher(teacherDto, teacherId);
     }
 
-    @DeleteMapping("/delete/{teacherId}")
-    public ResponseDTO<Void> deleteTeacher(@PathVariable Integer teacherId) {
+    @DeleteMapping("/delete")
+    public Response<Void> deleteTeacher(@RequestParam Integer teacherId) {
         return teacherService.deleteTeacher(teacherId);
     }
 }

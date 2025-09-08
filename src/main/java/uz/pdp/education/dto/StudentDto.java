@@ -11,9 +11,10 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class GroupCreateDTO {
-    @NotBlank(message = "name can be null or empty")
-    private String name;
+public class StudentDto {
+    @NotBlank(message = "fullName can not be null or empty")
+    private String fullName;
+    private int age;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

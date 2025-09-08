@@ -1,9 +1,10 @@
 package uz.pdp.education.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.education.dto.ResponseDTO;
-import uz.pdp.education.dto.StudentCreateDTO;
+import uz.pdp.education.dto.StudentDto;
+import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.Student;
 import uz.pdp.education.service.StudentService;
 
@@ -16,25 +17,25 @@ public class StudentController {
     private final StudentService studentService;
 
     @PostMapping("/create")
-    public ResponseDTO<Student> createStudent(@RequestBody StudentCreateDTO studentCreateDTO,
-                                              @RequestParam Integer teacherId,
-                                              @RequestParam Integer subjectId) {
-        return studentService.createStudent(studentCreateDTO, teacherId, subjectId);
+    public Response<Student> createStudent(@Valid @RequestBody StudentDto studentDto,
+                                           @RequestParam Integer teacherId,
+                                           @RequestParam Integer subjectId) {
+        return studentService.createStudent(studentDto, teacherId, subjectId);
     }
 
-    @GetMapping("/{studentId}")
-    public ResponseDTO<Student> getStudent(@PathVariable Integer studentId) {
+    @GetMapping("/get")
+    public Response<Student> getStudent(@RequestParam Integer studentId) {
         return studentService.getStudent(studentId);
     }
 
-    @GetMapping
-    public ResponseDTO<List<Student>> getAllStudent() {
+    @GetMapping("/getAll")
+    public Response<List<Student>> getAllStudent() {
         return studentService.getAllStudent();
     }
 
-    @PutMapping("/update/{studentId}")
-    public ResponseDTO<Void> updateStudent(@RequestBody StudentCreateDTO studentCreateDTO,
-                                           @PathVariable Integer studentId) {
-        return studentService.updateStudent(studentCreateDTO, studentId);
+    @PutMapping("/update")
+    public Response<Void> updateStudent(@RequestBody StudentDto studentDto,
+                                        @RequestParam Integer studentId) {
+        return studentService.updateStudent(studentDto, studentId);
     }
 }

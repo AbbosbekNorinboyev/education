@@ -1,14 +1,14 @@
 package uz.pdp.education.service;
 
-import uz.pdp.education.dto.ResponseDTO;
-import uz.pdp.education.dto.SubjectCreateDTO;
+import uz.pdp.education.dto.response.Response;
+import uz.pdp.education.dto.SubjectDto;
 import uz.pdp.education.entity.Subject;
 
 import java.util.List;
 
 public interface SubjectService {
-    ResponseDTO<Subject> createSubject(SubjectCreateDTO subjectCreateDTO, Integer teacherId);
-    ResponseDTO<Subject> getSubject(Integer subjectId);
-    ResponseDTO<List<Subject>> getAllSubject();
-    ResponseDTO<Void> updateSubject(SubjectCreateDTO subjectCreateDTO, Integer subjectId);
+    Response<Subject> createSubject(SubjectDto subjectDto, Integer teacherId);
+    Response<Subject> getSubject(Integer subjectId);
+    Response<List<Subject>> getAllSubject();
+    Response<Void> updateSubject(SubjectDto subjectDto, Integer subjectId);
 }
