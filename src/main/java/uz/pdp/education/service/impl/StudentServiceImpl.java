@@ -29,8 +29,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Response<?> createStudent(StudentDto studentDto,
-                                     Integer teacherId,
-                                     Integer subjectId) {
+                                     Long teacherId,
+                                     Long subjectId) {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
         Subject subject = subjectRepository.findById(subjectId)
@@ -49,7 +49,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Response<?> getStudent(Integer studentId) {
+    public Response<?> getStudent(Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found: " + studentId));
         log.info("Student successfully found");
@@ -83,7 +83,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Response<?> updateStudent(StudentDto studentDto) {
-        Student student = studentRepository.findById(Math.toIntExact(studentDto.getId()))
+        Student student = studentRepository.findById(studentDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found: " + studentDto.getId()));
         studentMapper.update(student, studentDto);
         studentRepository.save(student);

@@ -4,9 +4,9 @@ import uz.pdp.education.dto.StudentDto;
 import uz.pdp.education.dto.response.Response;
 
 public interface StudentService {
-    Response<?> createStudent(StudentDto studentDto, Integer teacherId, Integer subjectId);
+    Response<?> createStudent(StudentDto studentDto, Long teacherId, Long subjectId);
 
-    Response<?> getStudent(Integer studentId);
+    Response<?> getStudent(Long studentId);
 
     Response<?> getAllStudent();
 

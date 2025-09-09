@@ -19,7 +19,7 @@ public class TeacherController {
     }
 
     @GetMapping("/get")
-    public Response<?> getTeacher(@RequestParam Integer teacherId) {
+    public Response<?> getTeacher(@RequestParam Long teacherId) {
         return teacherService.getTeacher(teacherId);
     }
 
@@ -34,7 +34,7 @@ public class TeacherController {
     }
 
     @DeleteMapping("/delete")
-    public Response<?> deleteTeacher(@RequestParam Integer teacherId) {
+    public Response<?> deleteTeacher(@RequestParam Long teacherId) {
         return teacherService.deleteTeacher(teacherId);
     }
 }

@@ -15,7 +15,7 @@ public class SubjectController {
 
     @PostMapping("/create")
     public Response<?> createSubject(@Valid @RequestBody SubjectDto subjectDto,
-                                     @RequestParam Integer teacherId) {
+                                     @RequestParam Long teacherId) {
         return subjectService.createSubject(subjectDto, teacherId);
     }
 

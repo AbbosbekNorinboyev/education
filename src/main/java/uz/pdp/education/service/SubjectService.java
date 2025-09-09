@@ -4,7 +4,7 @@ import uz.pdp.education.dto.SubjectDto;
 import uz.pdp.education.dto.response.Response;
 
 public interface SubjectService {
-    Response<?> createSubject(SubjectDto subjectDto, Integer teacherId);
+    Response<?> createSubject(SubjectDto subjectDto, Long teacherId);
 
     Response<?> getSubject(Long subjectId);
 

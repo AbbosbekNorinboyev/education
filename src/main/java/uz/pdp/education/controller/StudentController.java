@@ -15,13 +15,13 @@ public class StudentController {
 
     @PostMapping("/create")
     public Response<?> createStudent(@Valid @RequestBody StudentDto studentDto,
-                                     @RequestParam Integer teacherId,
-                                     @RequestParam Integer subjectId) {
+                                     @RequestParam Long teacherId,
+                                     @RequestParam Long subjectId) {
         return studentService.createStudent(studentDto, teacherId, subjectId);
     }
 
     @GetMapping("/get")
-    public Response<?> getStudent(@RequestParam Integer studentId) {
+    public Response<?> getStudent(@RequestParam Long studentId) {
         return studentService.getStudent(studentId);
     }
 

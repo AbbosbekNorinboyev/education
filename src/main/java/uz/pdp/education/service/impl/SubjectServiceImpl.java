@@ -27,7 +27,7 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectMapper subjectMapper;
 
     @Override
-    public Response<?> createSubject(SubjectDto subjectDto, Integer teacherId) {
+    public Response<?> createSubject(SubjectDto subjectDto, Long teacherId) {
         Set<Teacher> teachers = new HashSet<>(teacherRepository.findAll());
         Subject subject = subjectMapper.toEntity(subjectDto);
         subject.setTeachers(teachers);
@@ -43,7 +43,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Response<?> getSubject(Long subjectId) {
-        Subject subject = subjectRepository.findById(Math.toIntExact(subjectId))
+        Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectId));
         log.info("Subject successfully found");
         return Response.builder()
@@ -76,7 +76,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Response<?> updateSubject(SubjectDto subjectDto) {
-        Subject subject = subjectRepository.findById(Math.toIntExact(subjectDto.getId()))
+        Subject subject = subjectRepository.findById(subjectDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectDto.getId()));
         subjectMapper.update(subject, subjectDto);
         subjectRepository.save(subject);

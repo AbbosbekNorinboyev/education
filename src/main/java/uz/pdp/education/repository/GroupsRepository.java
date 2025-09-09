@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uz.pdp.education.entity.Groups;
 
 @Repository
-public interface GroupsRepository extends GenericRepository<Groups, Integer> {
+public interface GroupsRepository extends GenericRepository<Groups, Long> {
     @Query(value = "delete from groups g where g.id = ?1", nativeQuery = true)
     @Modifying
     @Transactional

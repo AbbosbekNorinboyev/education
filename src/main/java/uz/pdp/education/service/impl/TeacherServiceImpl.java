@@ -41,7 +41,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Response<?> getTeacher(Integer teacherId) {
+    public Response<?> getTeacher(Long teacherId) {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
         log.info("Teacher successfully found");
@@ -75,7 +75,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Response<?> updateTeacher(TeacherDto teacherDto) {
-        Teacher teacher = teacherRepository.findById(Math.toIntExact(teacherDto.getId()))
+        Teacher teacher = teacherRepository.findById(teacherDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherDto.getId()));
         teacherMapper.update(teacher, teacherDto);
         teacherRepository.save(teacher);
@@ -94,7 +94,7 @@ public class TeacherServiceImpl implements TeacherService {
      * @return
      */
     @Override
-    public Response<?> deleteTeacher(Integer teacherId) {
+    public Response<?> deleteTeacher(Long teacherId) {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
         subjectRepository.deleteSubjectByTeacherId(Math.toIntExact(teacher.getId())); // subject ni ichida teacher ni id si bo'lgani uchun

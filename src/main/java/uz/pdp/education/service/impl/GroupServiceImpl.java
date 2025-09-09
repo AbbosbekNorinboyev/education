@@ -30,7 +30,7 @@ public class GroupServiceImpl implements GroupService {
     private final GroupMapper groupMapper;
 
     @Override
-    public Response<?> createGroup(GroupDto groupDto, Integer teacherId) {
+    public Response<?> createGroup(GroupDto groupDto, Long teacherId) {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
         Set<SupportTeacher> supportTeachers = new HashSet<>(supportTeacherRepository.findAll());
@@ -48,7 +48,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Response<?> getGroup(Integer groupId) {
+    public Response<?> getGroup(Long groupId) {
         Groups group = groupsRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + groupId));
         log.info("Group successfully found");
@@ -81,7 +81,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Response<?> updateGroup(GroupDto groupDto, Integer groupId) {
+    public Response<?> updateGroup(GroupDto groupDto, Long groupId) {
         Groups group = groupsRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + groupId));
         groupMapper.update(group, groupDto);

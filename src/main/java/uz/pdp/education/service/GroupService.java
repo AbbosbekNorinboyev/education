@@ -4,11 +4,11 @@ import uz.pdp.education.dto.GroupDto;
 import uz.pdp.education.dto.response.Response;
 
 public interface GroupService {
-    Response<?> createGroup(GroupDto groupDto, Integer teacherId);
+    Response<?> createGroup(GroupDto groupDto, Long teacherId);
 
-    Response<?> getGroup(Integer groupId);
+    Response<?> getGroup(Long groupId);
 
     Response<?> getAllGroup();
 
-    Response<?> updateGroup(GroupDto groupDto, Integer groupId);
+    Response<?> updateGroup(GroupDto groupDto, Long groupId);
 }
