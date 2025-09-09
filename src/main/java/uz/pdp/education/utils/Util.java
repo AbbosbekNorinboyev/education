@@ -64,10 +64,19 @@ public class Util {
         }
     }
 
-    public static String timeFormatter(Date date) {
+    public static String dateTimeFormatter(Date date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         return date.toInstant()
+                .atZone(ZoneId.of("UTC+5"))
+                .toLocalDateTime()
+                .format(formatter);
+    }
+
+    public static String localDateTimeFormatter(LocalDateTime localDateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS");
+
+        return localDateTime
                 .atZone(ZoneId.of("UTC+5"))
                 .toLocalDateTime()
                 .format(formatter);

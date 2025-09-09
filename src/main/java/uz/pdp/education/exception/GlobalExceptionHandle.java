@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static uz.pdp.education.utils.Util.localDateTimeFormatter;
+
 @RestControllerAdvice
 public class GlobalExceptionHandle {
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -27,7 +29,7 @@ public class GlobalExceptionHandle {
                 .message("Validation error")
                 .errors(errors)
                 .success(false)
-                .timestamp(LocalDateTime.now())
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -37,7 +39,7 @@ public class GlobalExceptionHandle {
                 .code(HttpStatus.NOT_FOUND.value())  // Not found request kodi
                 .message(resourceNotFoundException.getMessage())
                 .success(false)
-                .timestamp(LocalDateTime.now())
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -47,7 +49,7 @@ public class GlobalExceptionHandle {
                 .code(HttpStatus.INTERNAL_SERVER_ERROR.value())   // Internal Server Error request kodi
                 .message("Something wrong -> " + exception.getMessage())
                 .success(false)
-                .timestamp(LocalDateTime.now())
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -60,7 +62,7 @@ public class GlobalExceptionHandle {
                 .message(invalidHeadersException.getMessage())
                 .errors(errors)
                 .success(false)
-                .timestamp(LocalDateTime.now())
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -70,7 +72,7 @@ public class GlobalExceptionHandle {
                 .code(customizedRequestException.getCode())
                 .message(customizedRequestException.getMessage())
                 .success(false)
-                .timestamp(LocalDateTime.now())
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 }

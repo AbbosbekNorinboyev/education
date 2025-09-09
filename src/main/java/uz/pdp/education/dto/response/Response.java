@@ -26,5 +26,5 @@ public class Response<T> {
     private Object data;
     private Long elements;
     private Integer pages;
-    private LocalDateTime timestamp;
+    private String timestamp;
 }
