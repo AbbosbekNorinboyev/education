@@ -23,9 +23,9 @@ public class Subject extends BaseEntity {
     // fandan dars otadigan oqituvchilar
     @ManyToMany
     @JoinTable(
-            name = "teacherr_subject",
+            name = "user_subject",
             joinColumns = @JoinColumn(name = "subject_id"),
-            inverseJoinColumns = @JoinColumn(name = "teacher_id")
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<Teacher> teachers = new HashSet<>();
+    private Set<AuthUser> users = new HashSet<>();
 }

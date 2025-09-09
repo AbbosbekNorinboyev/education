@@ -21,7 +21,7 @@ public class SubjectMapper {
                 .id(entity.getId())
                 .name(entity.getName())
                 .price(entity.getPrice())
-                .teachers(entity.getTeachers())
+                .teachers(entity.getUsers())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .createdBy(entity.getCreatedBy())

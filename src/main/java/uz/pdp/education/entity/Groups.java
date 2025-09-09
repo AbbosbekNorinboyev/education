@@ -21,8 +21,12 @@ public class Groups extends BaseEntity {
     private String name;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "teacher_id")
-    private Teacher teacher;
+    private AuthUser teacher;
 
     private Double price;
 
@@ -33,7 +37,7 @@ public class Groups extends BaseEntity {
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
-    private Set<Student> students = new HashSet<>();
+    private Set<AuthUser> students = new HashSet<>();
 
     // yordamchi oqituvchilar
     @ManyToMany
@@ -42,10 +46,11 @@ public class Groups extends BaseEntity {
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "support_id")
     )
-    private Set<SupportTeacher> supports = new HashSet<>();
+    private Set<AuthUser> supports = new HashSet<>();
 
     private LocalDate startDate;
     private LocalDate endDate;
     @Enumerated(EnumType.STRING)
     private GroupStatus status;
+    private Double balance;
 }

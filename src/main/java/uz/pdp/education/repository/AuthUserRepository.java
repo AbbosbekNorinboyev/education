@@ -6,6 +6,6 @@ import uz.pdp.education.entity.AuthUser;
 import java.util.Optional;
 
 @Repository
-public interface AuthUserRepository extends GenericRepository<AuthUser, Integer> {
+public interface AuthUserRepository extends GenericRepository<AuthUser, Long> {
     Optional<AuthUser> findByUsername(String username);
 }

@@ -34,4 +34,9 @@ public class GroupController {
                                    @RequestParam Long groupId) {
         return groupService.updateGroup(groupDto, groupId);
     }
+
+    @GetMapping("/getGroupTeacherId")
+    public Response<?> getGroupTeacherId(@RequestParam Long teacherId) {
+        return groupService.getGroupTeacherId(teacherId);
+    }
 }

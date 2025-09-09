@@ -2,5 +2,8 @@ package uz.pdp.education.enums;
 
 public enum Role {
     USER,
-    ADMIN
+    ADMIN,
+    TEACHER,
+    STUDENT,
+    CALL
 }

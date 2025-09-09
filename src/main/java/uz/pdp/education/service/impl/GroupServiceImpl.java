@@ -6,14 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.GroupDto;
 import uz.pdp.education.dto.response.Response;
+import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.entity.Groups;
-import uz.pdp.education.entity.SupportTeacher;
-import uz.pdp.education.entity.Teacher;
+import uz.pdp.education.enums.GroupStatus;
 import uz.pdp.education.exception.ResourceNotFoundException;
 import uz.pdp.education.mapper.GroupMapper;
+import uz.pdp.education.repository.AuthUserRepository;
 import uz.pdp.education.repository.GroupsRepository;
-import uz.pdp.education.repository.SupportTeacherRepository;
-import uz.pdp.education.repository.TeacherRepository;
 import uz.pdp.education.service.GroupService;
 
 import java.util.HashSet;
@@ -24,19 +23,19 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class GroupServiceImpl implements GroupService {
-    private final SupportTeacherRepository supportTeacherRepository;
-    private final TeacherRepository teacherRepository;
+    private final AuthUserRepository authUserRepository;
     private final GroupsRepository groupsRepository;
     private final GroupMapper groupMapper;
 
     @Override
     public Response<?> createGroup(GroupDto groupDto, Long teacherId) {
-        Teacher teacher = teacherRepository.findById(teacherId)
+        AuthUser teacher = authUserRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
-        Set<SupportTeacher> supportTeachers = new HashSet<>(supportTeacherRepository.findAll());
+        Set<AuthUser> supportTeachers = new HashSet<>(authUserRepository.findAll());
         Groups group = groupMapper.toEntity(groupDto);
         group.setTeacher(teacher);
         group.setSupports(supportTeachers);
+        group.setStatus(GroupStatus.ACTIVE);
         groupsRepository.save(group);
         log.info("Group successfully created");
         return Response.builder()
@@ -64,10 +63,10 @@ public class GroupServiceImpl implements GroupService {
     public Response<?> getAllGroup() {
         List<Groups> groups = groupsRepository.findAll();
         if (!groups.isEmpty()) {
-            log.info("Group successfully created");
+            log.info("Group list successfully found");
             return Response.builder()
                     .code(HttpStatus.OK.value())
-                    .message("Group list successfully created")
+                    .message("Group list successfully found")
                     .success(true)
                     .data(groupMapper.dtoList(groups))
                     .build();
@@ -91,6 +90,18 @@ public class GroupServiceImpl implements GroupService {
                 .code(HttpStatus.OK.value())
                 .message("Group successfully updated")
                 .success(true)
+                .build();
+    }
+
+    @Override
+    public Response<?> getGroupTeacherId(Long teacherId) {
+        List<Groups> groups = groupsRepository.findAllByTeacherId(teacherId);
+        log.info("Group list successfully found");
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .message("Group list successfully found by teacher id")
+                .success(true)
+                .data(groupMapper.dtoList(groups))
                 .build();
     }
 }

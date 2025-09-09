@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.dto.SubjectDto;
+import uz.pdp.education.dto.response.Response;
+import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.entity.Subject;
-import uz.pdp.education.entity.Teacher;
 import uz.pdp.education.exception.ResourceNotFoundException;
 import uz.pdp.education.mapper.SubjectMapper;
+import uz.pdp.education.repository.AuthUserRepository;
 import uz.pdp.education.repository.SubjectRepository;
-import uz.pdp.education.repository.TeacherRepository;
 import uz.pdp.education.service.SubjectService;
 
 import java.util.HashSet;
@@ -22,15 +22,15 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class SubjectServiceImpl implements SubjectService {
+    private final AuthUserRepository authUserRepository;
     private final SubjectRepository subjectRepository;
-    private final TeacherRepository teacherRepository;
     private final SubjectMapper subjectMapper;
 
     @Override
     public Response<?> createSubject(SubjectDto subjectDto, Long teacherId) {
-        Set<Teacher> teachers = new HashSet<>(teacherRepository.findAll());
+        Set<AuthUser> teachers = new HashSet<>(authUserRepository.findAll());
         Subject subject = subjectMapper.toEntity(subjectDto);
-        subject.setTeachers(teachers);
+        subject.setUsers(teachers);
         subjectRepository.save(subject);
         log.info("Subject successfully created");
         return Response.builder()
