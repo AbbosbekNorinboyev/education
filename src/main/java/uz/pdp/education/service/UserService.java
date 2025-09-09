@@ -15,11 +15,11 @@ public interface UserService {
 
     Response<?> get(Long id);
 
-    Response<?> getAll(Pageable pageable, String role, String query);
+    Response<?> getAll(Pageable pageable);
 
-    Response<?> update(Long id, UserDto dto);
+    Response<?> update(UserDto dto);
 
-    Response<?> me(AuthUser user);
+    Response<?> me(AuthUser authUser);
 
     Response<?> addStudentToGroup(List<Ids> dto, Long groupId);
 

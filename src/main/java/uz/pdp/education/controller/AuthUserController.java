@@ -11,7 +11,7 @@ import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.service.AuthUserService;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auths")
 @RequiredArgsConstructor
 public class AuthUserController {
     private final AuthUserService authUserService;

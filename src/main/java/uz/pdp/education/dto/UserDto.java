@@ -11,6 +11,7 @@ import uz.pdp.education.enums.Role;
 @AllArgsConstructor
 @Builder
 public class UserDto {
+    private Long id;
     private String fullName;
     private String phoneNumber;
     private String password;

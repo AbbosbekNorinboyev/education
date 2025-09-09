@@ -27,6 +27,7 @@ public class GlobalExceptionHandle {
         return Response.builder()
                 .code(HttpStatus.BAD_REQUEST.value())  // Bad request kodi
                 .message("Validation error")
+                .status(HttpStatus.BAD_REQUEST)
                 .errors(errors)
                 .success(false)
                 .timestamp(localDateTimeFormatter(LocalDateTime.now()))
@@ -38,6 +39,7 @@ public class GlobalExceptionHandle {
         return Response.builder()
                 .code(HttpStatus.NOT_FOUND.value())  // Not found request kodi
                 .message(resourceNotFoundException.getMessage())
+                .status(HttpStatus.NOT_FOUND)
                 .success(false)
                 .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
@@ -48,6 +50,7 @@ public class GlobalExceptionHandle {
         return Response.builder()
                 .code(HttpStatus.INTERNAL_SERVER_ERROR.value())   // Internal Server Error request kodi
                 .message("Something wrong -> " + exception.getMessage())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .success(false)
                 .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
@@ -60,6 +63,7 @@ public class GlobalExceptionHandle {
         return Response.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
                 .message(invalidHeadersException.getMessage())
+                .status(HttpStatus.BAD_REQUEST)
                 .errors(errors)
                 .success(false)
                 .timestamp(localDateTimeFormatter(LocalDateTime.now()))

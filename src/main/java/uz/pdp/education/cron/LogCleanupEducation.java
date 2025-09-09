@@ -15,7 +15,7 @@ public class LogCleanupEducation {
     private static final Logger logger = LoggerFactory.getLogger(LogCleanupEducation.class);
     private static final String LOG_PATH = "C:\\Abbos\\Spring Project\\Test Projects\\education\\logs\\EducationLog.log";
 
-    @Scheduled(cron = "* */10 * * * *") // har 10 minutda ishlaydi
+    @Scheduled(cron = "0 * * * * *") // har minutda ishlaydi
     public void clearLogFile() {
         File file = new File(LOG_PATH);
         if (file.exists()) {

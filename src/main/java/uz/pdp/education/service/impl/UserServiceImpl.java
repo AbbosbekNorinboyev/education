@@ -1,12 +1,18 @@
 package uz.pdp.education.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.Ids;
 import uz.pdp.education.dto.UserDto;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.AuthUser;
+import uz.pdp.education.exception.ResourceNotFoundException;
+import uz.pdp.education.mapper.UserMapper;
+import uz.pdp.education.repository.AuthUserRepository;
 import uz.pdp.education.service.UserService;
 
 import java.time.LocalDate;
@@ -14,25 +20,57 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
+    private final AuthUserRepository authUserRepository;
+    private final UserMapper userMapper;
+
     @Override
     public Response<?> get(Long id) {
-        return null;
+        AuthUser authUser = authUserRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("AuthUser not found: " + id));
+        log.info("AuthUser successfully found");
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .message("AuthUser successfully found")
+                .success(true)
+                .data(userMapper.toDto(authUser))
+                .build();
     }
 
     @Override
-    public Response<?> getAll(Pageable pageable, String role, String query) {
-        return null;
+    public Response<?> getAll(Pageable pageable) {
+        Page<UserDto> users = authUserRepository.findAll(pageable)
+                .map(userMapper::toDto);
+        log.info("AuthUser list successfully found");
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .message("AuthUser list successfully found")
+                .data(users)
+                .build();
     }
 
     @Override
-    public Response<?> update(Long id, UserDto dto) {
-        return null;
+    public Response<?> update(UserDto dto) {
+        AuthUser authUser = authUserRepository.findById(dto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("AuthUser not found: " + dto.getId()));
+        userMapper.update(authUser, dto);
+        authUserRepository.save(authUser);
+        log.info("AuthUser successfully updated");
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .message("AuthUser successfully updated")
+                .build();
     }
 
     @Override
     public Response<?> me(AuthUser user) {
-        return null;
+        log.info("AuthUser successfully found");
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .message("AuthUser successfully found")
+                .data(userMapper.toDto(user))
+                .build();
     }
 
     @Override
