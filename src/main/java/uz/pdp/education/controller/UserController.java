@@ -2,10 +2,8 @@ package uz.pdp.education.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import uz.pdp.education.dto.UserDto;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.service.UserService;
@@ -26,6 +24,11 @@ public class UserController {
     public Response<?> getAll(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
                               @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
         return userService.getAll(PageRequest.of(page, size));
+    }
+
+    @PutMapping("/update")
+    public Response<?> update(@RequestBody UserDto dto) {
+        return userService.update(dto);
     }
 
     @GetMapping("/me")

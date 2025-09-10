@@ -3,7 +3,6 @@ package uz.pdp.education.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,9 +22,9 @@ public class Subject extends BaseEntity {
     // fandan dars otadigan oqituvchilar
     @ManyToMany
     @JoinTable(
-            name = "user_subject",
+            name = "teacher_subject",
             joinColumns = @JoinColumn(name = "subject_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "teacher_id")
     )
-    private Set<AuthUser> users = new HashSet<>();
+    private Set<AuthUser> teachers = new HashSet<>();
 }

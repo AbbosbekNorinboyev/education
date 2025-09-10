@@ -14,9 +14,12 @@ import uz.pdp.education.repository.AuthUserRepository;
 import uz.pdp.education.repository.SubjectRepository;
 import uz.pdp.education.service.SubjectService;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -28,16 +31,16 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Response<?> createSubject(SubjectDto subjectDto, Long teacherId) {
-        Set<AuthUser> teachers = new HashSet<>(authUserRepository.findAll());
         Subject subject = subjectMapper.toEntity(subjectDto);
-        subject.setUsers(teachers);
         subjectRepository.save(subject);
         log.info("Subject successfully created");
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .message("Subject successfully saved")
                 .success(true)
                 .data(subjectMapper.toDto(subject))
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -48,9 +51,11 @@ public class SubjectServiceImpl implements SubjectService {
         log.info("Subject successfully found");
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .message("Subject successfully found")
                 .success(true)
                 .data(subjectMapper.toDto(subject))
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -61,16 +66,20 @@ public class SubjectServiceImpl implements SubjectService {
             log.info("Subject list successfully found");
             return Response.builder()
                     .code(HttpStatus.OK.value())
+                    .status(HttpStatus.OK)
                     .message("Subject list successfully found")
                     .success(true)
                     .data(subjectMapper.dtoList(subjects))
+                    .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                     .build();
         }
         log.error("Subject list not found");
         return Response.builder()
                 .code(HttpStatus.NOT_FOUND.value())
+                .status(HttpStatus.NOT_FOUND)
                 .message("Subject list not found")
                 .success(false)
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -83,8 +92,31 @@ public class SubjectServiceImpl implements SubjectService {
         log.info("Subject successfully updated");
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .message("Subject successfully updated")
                 .success(true)
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                .build();
+    }
+
+    @Override
+    public Response<?> addTeacherToSubject(Long teacherId, Long subjectId) {
+        AuthUser teacher = authUserRepository.findById(teacherId)
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectId));
+        if (subject.getTeachers() != null && !subject.getTeachers().isEmpty()) {
+            subject.getTeachers().add(teacher);
+        } else {
+            subject.setTeachers(new HashSet<>(Set.of(teacher)));
+        }
+        subjectRepository.save(subject);
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Add teacher to subject")
+                .success(true)
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 }

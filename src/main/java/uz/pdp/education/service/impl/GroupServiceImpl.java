@@ -15,9 +15,12 @@ import uz.pdp.education.repository.AuthUserRepository;
 import uz.pdp.education.repository.GroupsRepository;
 import uz.pdp.education.service.GroupService;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -40,9 +43,11 @@ public class GroupServiceImpl implements GroupService {
         log.info("Group successfully created");
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .message("Group successfully created")
                 .success(true)
                 .data(groupMapper.toDto(group))
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -53,9 +58,11 @@ public class GroupServiceImpl implements GroupService {
         log.info("Group successfully found");
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .message("Group successfully found")
                 .success(true)
                 .data(groupMapper.toDto(group))
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -66,16 +73,20 @@ public class GroupServiceImpl implements GroupService {
             log.info("Group list successfully found");
             return Response.builder()
                     .code(HttpStatus.OK.value())
+                    .status(HttpStatus.OK)
                     .message("Group list successfully found")
                     .success(true)
                     .data(groupMapper.dtoList(groups))
+                    .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                     .build();
         }
         log.error("Group list not found");
         return Response.builder()
                 .code(HttpStatus.NOT_FOUND.value())
+                .status(HttpStatus.NOT_FOUND)
                 .message("Group list not found")
                 .success(false)
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -88,8 +99,10 @@ public class GroupServiceImpl implements GroupService {
         log.info("Group successfully updated");
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .message("Group successfully updated")
                 .success(true)
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -99,9 +112,11 @@ public class GroupServiceImpl implements GroupService {
         log.info("Group list successfully found");
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .message("Group list successfully found by teacher id")
                 .success(true)
                 .data(groupMapper.dtoList(groups))
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 }

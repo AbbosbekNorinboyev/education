@@ -16,7 +16,10 @@ import uz.pdp.education.repository.AuthUserRepository;
 import uz.pdp.education.service.UserService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +35,11 @@ public class UserServiceImpl implements UserService {
         log.info("AuthUser successfully found");
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .message("AuthUser successfully found")
                 .success(true)
                 .data(userMapper.toDto(authUser))
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -45,8 +50,10 @@ public class UserServiceImpl implements UserService {
         log.info("AuthUser list successfully found");
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .message("AuthUser list successfully found")
                 .data(users)
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -59,13 +66,15 @@ public class UserServiceImpl implements UserService {
         log.info("AuthUser successfully updated");
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .message("AuthUser successfully updated")
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
     @Override
     public Response<?> me(AuthUser user) {
-        if (user==null) {
+        if (user == null) {
             return Response.builder()
                     .message("USER IS NULL")
                     .build();
@@ -73,8 +82,10 @@ public class UserServiceImpl implements UserService {
         log.info("AuthUser successfully found");
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .message("AuthUser successfully found")
                 .data(userMapper.toDto(user))
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 

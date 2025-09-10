@@ -33,4 +33,10 @@ public class SubjectController {
     public Response<?> updateSubject(@RequestBody SubjectDto subjectDto) {
         return subjectService.updateSubject(subjectDto);
     }
+
+    @PostMapping("/addTeacherToSubject")
+    public Response<?> addTeacherToSubject(@RequestParam Long teacherId,
+                                           @RequestParam Long subjectId) {
+        return subjectService.addTeacherToSubject(teacherId, subjectId);
+    }
 }

@@ -17,9 +17,11 @@ import uz.pdp.education.repository.AuthUserRepository;
 import uz.pdp.education.service.AuthUserService;
 import uz.pdp.education.utils.JWTUtil;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static uz.pdp.education.utils.PasswordHasher.hashPassword;
+import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -35,8 +37,10 @@ public class AuthUserServiceImpl implements AuthUserService {
         if (byUsername.isPresent()) {
             return Response.builder()
                     .code(HttpStatus.BAD_REQUEST.value())
+                    .status(HttpStatus.BAD_REQUEST)
                     .success(false)
                     .message("Username already exists")
+                    .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                     .build();
         }
         AuthUser authUser = new AuthUser();
@@ -47,8 +51,10 @@ public class AuthUserServiceImpl implements AuthUserService {
         authUserRepository.save(authUser);
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .success(true)
                 .message("AuthUser successfully register")
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 
@@ -59,8 +65,10 @@ public class AuthUserServiceImpl implements AuthUserService {
         if (authUser.getUsername() == null) {
             return Response.builder()
                     .code(HttpStatus.NOT_FOUND.value())
+                    .status(HttpStatus.NOT_FOUND)
                     .success(false)
                     .message("Username not found")
+                    .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                     .build();
         }
         authenticationManager.authenticate(
@@ -70,8 +78,10 @@ public class AuthUserServiceImpl implements AuthUserService {
         String jwtToken = jwtUtil.generateToken(userDetails.getUsername());
         return Response.builder()
                 .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
                 .success(true)
                 .message(jwtToken)
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
 }

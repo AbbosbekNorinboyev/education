@@ -11,4 +11,6 @@ public interface SubjectService {
     Response<?> getAllSubject();
 
     Response<?> updateSubject(SubjectDto subjectDto);
+
+    Response<?> addTeacherToSubject(Long teacherId, Long subjectId);
 }

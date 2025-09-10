@@ -2,10 +2,6 @@ package uz.pdp.education.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import uz.pdp.education.entity.AuthUser;
-
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @NoArgsConstructor
 @Builder
@@ -17,9 +13,4 @@ public class SubjectDto {
     private Long id;
     @NotBlank(message = "name can not be null or empty")
     private String name;
-    private Double price;
-    private Set<AuthUser> teachers;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private Long createdBy;
 }

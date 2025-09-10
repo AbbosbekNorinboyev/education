@@ -12,7 +12,6 @@ public class SubjectMapper {
     public Subject toEntity(SubjectDto dto) {
         return Subject.builder()
                 .name(dto.getName())
-                .price(dto.getPrice())
                 .build();
     }
 
@@ -20,11 +19,6 @@ public class SubjectMapper {
         return SubjectDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
-                .price(entity.getPrice())
-                .teachers(entity.getUsers())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
-                .createdBy(entity.getCreatedBy())
                 .build();
     }
 
@@ -41,9 +35,6 @@ public class SubjectMapper {
         }
         if (dto.getName() != null && !dto.getName().trim().isEmpty()) {
             entity.setName(dto.getName());
-        }
-        if (dto.getPrice() > 0) {
-            entity.setPrice(dto.getPrice());
         }
     }
 }
