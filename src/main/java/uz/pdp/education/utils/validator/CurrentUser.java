@@ -1,4 +1,4 @@
-package uz.pdp.education.config;
+package uz.pdp.education.utils.validator;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

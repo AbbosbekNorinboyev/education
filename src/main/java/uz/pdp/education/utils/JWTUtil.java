@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import uz.pdp.education.config.CustomUserDetailsService;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +22,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JWTUtil {
     private final CustomUserDetailsService userDetailsService;
-    private final String SECRET_KEY = "secretaesrdtfghjkllkjhugyufdrxfgvqwertyuiiiiopasdfghjklzxcvbnm";
+    private final String KEY = "secretaesrdtfghjkllkjhugyufdrxfgvqwertyuiiiiopasdfghjklzxcvbnm";
+    private final String SECRET_KEY = Base64.getEncoder().encodeToString(KEY.getBytes());
 
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();

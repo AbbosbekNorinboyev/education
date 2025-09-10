@@ -2,11 +2,14 @@ package uz.pdp.education.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.service.UserService;
-import uz.pdp.education.config.CurrentUser;
+import uz.pdp.education.utils.validator.CurrentUser;
 
 @RestController
 @RequestMapping("/api/users")

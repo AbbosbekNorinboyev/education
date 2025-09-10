@@ -65,6 +65,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response<?> me(AuthUser user) {
+        if (user==null) {
+            return Response.builder()
+                    .message("USER IS NULL")
+                    .build();
+        }
         log.info("AuthUser successfully found");
         return Response.builder()
                 .code(HttpStatus.OK.value())
