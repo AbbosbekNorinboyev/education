@@ -4,15 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import uz.pdp.education.dto.GroupDto;
+import uz.pdp.education.dto.request.GroupRequest;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.entity.Groups;
-import uz.pdp.education.enums.GroupStatus;
+import uz.pdp.education.entity.Subject;
 import uz.pdp.education.exception.ResourceNotFoundException;
 import uz.pdp.education.mapper.GroupMapper;
 import uz.pdp.education.repository.AuthUserRepository;
 import uz.pdp.education.repository.GroupsRepository;
+import uz.pdp.education.repository.SubjectRepository;
 import uz.pdp.education.service.GroupService;
 
 import java.time.LocalDateTime;
@@ -26,19 +27,20 @@ import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 @RequiredArgsConstructor
 @Slf4j
 public class GroupServiceImpl implements GroupService {
+    private final SubjectRepository subjectRepository;
     private final AuthUserRepository authUserRepository;
     private final GroupsRepository groupsRepository;
     private final GroupMapper groupMapper;
 
     @Override
-    public Response<?> createGroup(GroupDto groupDto, Long teacherId) {
-        AuthUser teacher = authUserRepository.findById(teacherId)
-                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
-        Set<AuthUser> supportTeachers = new HashSet<>(authUserRepository.findAll());
-        Groups group = groupMapper.toEntity(groupDto);
+    public Response<?> createGroup(GroupRequest groupRequest) {
+        AuthUser teacher = authUserRepository.findById(groupRequest.getTeacherId())
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + groupRequest.getTeacherId()));
+        Subject subject = subjectRepository.findById(groupRequest.getSubjectId())
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + groupRequest.getSubjectId()));
+        Groups group = groupMapper.toEntity(groupRequest);
         group.setTeacher(teacher);
-        group.setSupports(supportTeachers);
-        group.setStatus(GroupStatus.ACTIVE);
+        group.setSubject(subject);
         groupsRepository.save(group);
         log.info("Group successfully created");
         return Response.builder()
@@ -46,7 +48,7 @@ public class GroupServiceImpl implements GroupService {
                 .status(HttpStatus.OK)
                 .message("Group successfully created")
                 .success(true)
-                .data(groupMapper.toDto(group))
+                .data(groupMapper.toResponse(group))
                 .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
@@ -61,7 +63,7 @@ public class GroupServiceImpl implements GroupService {
                 .status(HttpStatus.OK)
                 .message("Group successfully found")
                 .success(true)
-                .data(groupMapper.toDto(group))
+                .data(groupMapper.toResponse(group))
                 .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }
@@ -91,10 +93,10 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Response<?> updateGroup(GroupDto groupDto, Long groupId) {
+    public Response<?> updateGroup(GroupRequest groupRequest, Long groupId) {
         Groups group = groupsRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + groupId));
-        groupMapper.update(group, groupDto);
+        groupMapper.update(group, groupRequest);
         groupsRepository.save(group);
         log.info("Group successfully updated");
         return Response.builder()

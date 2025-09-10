@@ -3,7 +3,7 @@ package uz.pdp.education.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.education.dto.GroupDto;
+import uz.pdp.education.dto.request.GroupRequest;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.service.GroupService;
 
@@ -14,9 +14,8 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping("/create")
-    public Response<?> createGroup(@Valid @RequestBody GroupDto groupDto,
-                                   @RequestParam Long teacherId) {
-        return groupService.createGroup(groupDto, teacherId);
+    public Response<?> createGroup(@Valid @RequestBody GroupRequest groupRequest) {
+        return groupService.createGroup(groupRequest);
     }
 
     @GetMapping("/get")
@@ -30,9 +29,9 @@ public class GroupController {
     }
 
     @PutMapping("/update")
-    public Response<?> updateGroup(@RequestBody GroupDto groupDto,
+    public Response<?> updateGroup(@RequestBody GroupRequest groupRequest,
                                    @RequestParam Long groupId) {
-        return groupService.updateGroup(groupDto, groupId);
+        return groupService.updateGroup(groupRequest, groupId);
     }
 
     @GetMapping("/getGroupTeacherId")

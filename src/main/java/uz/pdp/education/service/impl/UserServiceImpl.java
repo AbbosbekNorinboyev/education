@@ -10,6 +10,7 @@ import uz.pdp.education.dto.Ids;
 import uz.pdp.education.dto.UserDto;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.AuthUser;
+import uz.pdp.education.enums.Role;
 import uz.pdp.education.exception.ResourceNotFoundException;
 import uz.pdp.education.mapper.UserMapper;
 import uz.pdp.education.repository.AuthUserRepository;

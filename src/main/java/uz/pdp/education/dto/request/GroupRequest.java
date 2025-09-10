@@ -1,13 +1,10 @@
-package uz.pdp.education.dto;
+package uz.pdp.education.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.enums.GroupStatus;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @NoArgsConstructor
 @Builder
@@ -15,16 +12,13 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-public class GroupDto {
-    private Long id;
+public class GroupRequest {
     @NotBlank(message = "name can be null or empty")
     private String name;
-    private Set<AuthUser> students;
-    private Set<AuthUser> supports;
+    private Long subjectId;
+    private Long teacherId;
+    private Double price;
     private LocalDate startDate;
     private LocalDate endDate;
     private GroupStatus status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private Long createdBy;
 }

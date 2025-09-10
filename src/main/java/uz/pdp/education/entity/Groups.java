@@ -52,5 +52,4 @@ public class Groups extends BaseEntity {
     private LocalDate endDate;
     @Enumerated(EnumType.STRING)
     private GroupStatus status;
-    private Double balance;
 }
