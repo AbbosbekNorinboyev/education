@@ -17,5 +17,14 @@ public interface GroupsRepository extends GenericRepository<Groups, Long> {
 
     List<Groups> findAllByTeacherId(Long teacherId);
 
+    List<Groups> findAllBySubjectId(Long subjectId);
+
+    @Query(value = "select * from groups g" +
+            "         left join group_support gs" +
+            "                   on g.id = gs.group_id" +
+            " where gs.support_id = ?1",
+            nativeQuery = true)
+    List<Groups> findAllBySupportTeacherId(Long supportTeacherId);
+
     List<Groups> findAllByStatus(String status);
 }

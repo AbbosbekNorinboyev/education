@@ -17,9 +17,7 @@ import uz.pdp.education.repository.SubjectRepository;
 import uz.pdp.education.service.GroupService;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 
@@ -109,13 +107,41 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Response<?> getGroupTeacherId(Long teacherId) {
+    public Response<?> getGroupsTeacherId(Long teacherId) {
         List<Groups> groups = groupsRepository.findAllByTeacherId(teacherId);
-        log.info("Group list successfully found");
+        log.info("Group list successfully found by teacher id");
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .message("Group list successfully found by teacher id")
+                .success(true)
+                .data(groupMapper.dtoList(groups))
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                .build();
+    }
+
+    @Override
+    public Response<?> getGroupsSubjectId(Long subjectId) {
+        List<Groups> groups = groupsRepository.findAllBySubjectId(subjectId);
+        log.info("Group list successfully found by subject id");
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Group list successfully found by subject id")
+                .success(true)
+                .data(groupMapper.dtoList(groups))
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                .build();
+    }
+
+    @Override
+    public Response<?> getGroupsBySupportTeacherId(Long supportTeacherId) {
+        List<Groups> groups = groupsRepository.findAllBySupportTeacherId(supportTeacherId);
+        log.info("Group list successfully found by support teacher id");
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Group list successfully found by support teacher id")
                 .success(true)
                 .data(groupMapper.dtoList(groups))
                 .timestamp(localDateTimeFormatter(LocalDateTime.now()))

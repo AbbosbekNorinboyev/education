@@ -36,6 +36,16 @@ public class GroupController {
 
     @GetMapping("/getGroupTeacherId")
     public Response<?> getGroupTeacherId(@RequestParam Long teacherId) {
-        return groupService.getGroupTeacherId(teacherId);
+        return groupService.getGroupsTeacherId(teacherId);
+    }
+
+    @GetMapping("/getGroupSubjectId")
+    public Response<?> getGroupSubjectId(@RequestParam Long subjectId) {
+        return groupService.getGroupsSubjectId(subjectId);
+    }
+
+    @GetMapping("/getGroupsBySupportTeacherId")
+    public Response<?> getGroupsBySupportTeacherId(@RequestParam Long supportTeacherId) {
+        return groupService.getGroupsBySupportTeacherId(supportTeacherId);
     }
 }

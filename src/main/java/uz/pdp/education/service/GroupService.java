@@ -12,5 +12,9 @@ public interface GroupService {
 
     Response<?> updateGroup(GroupRequest groupRequest, Long groupId);
 
-    Response<?> getGroupTeacherId(Long teacherId);
+    Response<?> getGroupsTeacherId(Long teacherId);
+
+    Response<?> getGroupsSubjectId(Long subjectId);
+
+    Response<?> getGroupsBySupportTeacherId(Long supportTeacherId);
 }
