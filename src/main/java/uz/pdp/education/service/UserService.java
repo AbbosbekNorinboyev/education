@@ -2,7 +2,6 @@ package uz.pdp.education.service;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import uz.pdp.education.dto.Ids;
 import uz.pdp.education.dto.UserDto;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.AuthUser;
@@ -21,7 +20,7 @@ public interface UserService {
 
     Response<?> me(AuthUser authUser);
 
-    Response<?> addStudentToGroup(List<Ids> dto, Long groupId);
+    Response<?> addStudentToGroup(List<Long> ids, Long groupId);
 
     Response<?> getStudentByDateAndGroup(LocalDate localDate, Long groupId);
 

@@ -9,6 +9,9 @@ import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.service.UserService;
 import uz.pdp.education.utils.validator.CurrentUser;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -34,5 +37,34 @@ public class UserController {
     @GetMapping("/me")
     public Response<?> me(@CurrentUser AuthUser authUser) {
         return userService.me(authUser);
+    }
+
+    @PostMapping("/addStudentToGroup")
+    public Response<?> addStudentToGroup(@RequestParam List<Long> ids,
+                                         @RequestParam Long groupId) {
+        return userService.addStudentToGroup(ids, groupId);
+    }
+
+    @GetMapping("/getStudentByDateAndGroup")
+    public Response<?> getStudentByDateAndGroup(LocalDate localDate, Long groupId) {
+        return null;
+    }
+
+    @GetMapping("/roleStatistics")
+    public Response<?> roleStatistics() {
+        return null;
+    }
+
+    @GetMapping("/getAllByGroupId")
+    public Response<?> getAllByGroupId(Long groupId) {
+
+        return null;
+    }
+
+    @GetMapping("/search")
+    public Response<?> search(@RequestParam(required = false) String fullName,
+                              @RequestParam(required = false) String phoneNumber,
+                              @RequestParam(required = false) String username) {
+        return userService.search(fullName, phoneNumber, username);
     }
 }

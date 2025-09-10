@@ -4,21 +4,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import uz.pdp.education.dto.Ids;
 import uz.pdp.education.dto.UserDto;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.AuthUser;
+import uz.pdp.education.entity.Groups;
 import uz.pdp.education.enums.Role;
 import uz.pdp.education.exception.ResourceNotFoundException;
 import uz.pdp.education.mapper.UserMapper;
 import uz.pdp.education.repository.AuthUserRepository;
+import uz.pdp.education.repository.GroupsRepository;
 import uz.pdp.education.service.UserService;
+import uz.pdp.education.specification.AuthUserSpecification;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 
@@ -26,6 +31,7 @@ import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
+    private final GroupsRepository groupsRepository;
     private final AuthUserRepository authUserRepository;
     private final UserMapper userMapper;
 
@@ -91,8 +97,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response<?> addStudentToGroup(List<Ids> dto, Long groupId) {
-        return null;
+    public Response<?> addStudentToGroup(List<Long> ids, Long groupId) {
+        Groups group = groupsRepository.findById(groupId)
+                .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + groupId));
+        for (Long id : ids) {
+            AuthUser authUser = authUserRepository.findById(id).orElse(null);
+            if (authUser != null) {
+                authUser.setRole(Role.STUDENT);
+                if (group.getStudents() != null && !group.getStudents().isEmpty()) {
+                    group.getStudents().add(authUser);
+                } else {
+                    group.setStudents(new HashSet<>(Set.of(authUser)));
+                }
+            }
+        }
+        groupsRepository.save(group);
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Add students to group")
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                .build();
     }
 
     @Override
@@ -112,6 +137,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response<?> search(String fullName, String phoneNumber, String username) {
-        return null;
+        Specification<AuthUser> specification = Specification.where(null);
+        if (fullName != null && !fullName.isEmpty()) {
+            specification = specification.and(AuthUserSpecification.hasFullName(fullName));
+        }
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            specification = specification.and(AuthUserSpecification.hasFullName(phoneNumber));
+        }
+        if (username != null && !username.isEmpty()) {
+            specification = specification.and(AuthUserSpecification.hasFullName(username));
+        }
+        List<AuthUser> authUsers = authUserRepository.findAll(specification);
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("AuthUser successfully found")
+                .data(userMapper.dtoList(authUsers))
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                .build();
     }
 }
