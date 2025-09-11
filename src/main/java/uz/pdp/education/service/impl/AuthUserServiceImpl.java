@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.config.CustomUserDetailsService;
 import uz.pdp.education.dto.LoginRequest;
@@ -13,6 +12,7 @@ import uz.pdp.education.dto.RegisterRequest;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.enums.Role;
+import uz.pdp.education.exception.ResourceNotFoundException;
 import uz.pdp.education.repository.AuthUserRepository;
 import uz.pdp.education.service.AuthUserService;
 import uz.pdp.education.utils.JWTUtil;
@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static uz.pdp.education.utils.PasswordHasher.hashPassword;
+import static uz.pdp.education.utils.PasswordValidator.validatePassword;
 import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 
 @Service
@@ -61,13 +62,22 @@ public class AuthUserServiceImpl implements AuthUserService {
     @Override
     public Response<?> login(LoginRequest loginRequest) {
         AuthUser authUser = authUserRepository.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("AuthUser not found by username: " + loginRequest.getUsername()));
+                .orElseThrow(() -> new ResourceNotFoundException("AuthUser not found by username: " + loginRequest.getUsername()));
         if (authUser.getUsername() == null) {
             return Response.builder()
                     .code(HttpStatus.NOT_FOUND.value())
                     .status(HttpStatus.NOT_FOUND)
                     .success(false)
                     .message("Username not found")
+                    .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                    .build();
+        }
+        if (!validatePassword(loginRequest.getPassword(), authUser.getPassword())) {
+            return Response.builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .status(HttpStatus.BAD_REQUEST)
+                    .success(false)
+                    .message("Invalid password")
                     .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                     .build();
         }
