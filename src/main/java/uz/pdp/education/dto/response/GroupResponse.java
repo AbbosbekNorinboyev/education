@@ -1,5 +1,6 @@
 package uz.pdp.education.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GroupResponse {
     private Long id;
     private String name;

@@ -1,19 +1,18 @@
 package uz.pdp.education.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uz.pdp.education.enums.Weeks;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class AboutUsResponse {
+public class GroupDayResponse {
     private Long id;
-    private String name;
-    private String title;
-    private String description;
+    private Weeks weeks;
+    private String groupTime;
+    private Long groupId;
 }
