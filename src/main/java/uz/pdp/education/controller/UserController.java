@@ -52,13 +52,12 @@ public class UserController {
 
     @GetMapping("/roleStatistics")
     public Response<?> roleStatistics() {
-        return null;
+        return userService.roleStatistics();
     }
 
     @GetMapping("/getAllByGroupId")
-    public Response<?> getAllByGroupId(Long groupId) {
-
-        return null;
+    public Response<?> getAllByGroupId(@RequestParam Long groupId) {
+        return userService.getAllByGroupId(groupId);
     }
 
     @GetMapping("/search")

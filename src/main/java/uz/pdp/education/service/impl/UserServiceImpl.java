@@ -1,5 +1,6 @@
 package uz.pdp.education.service.impl;
 
+import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import uz.pdp.education.dto.ShortDto;
 import uz.pdp.education.dto.UserDto;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.AuthUser;
@@ -21,6 +23,7 @@ import uz.pdp.education.specification.AuthUserSpecification;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -127,12 +130,37 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response<?> roleStatistics() {
-        return null;
+        List<Tuple> roleStatistics = authUserRepository.roleStatistics();
+        List<ShortDto> shortDtoList = new ArrayList<>();
+        for (Tuple roleStatistic : roleStatistics) {
+            shortDtoList.add(
+                    new ShortDto(
+                            String.valueOf(roleStatistic.get(1, Role.class)),
+                            roleStatistic.get(0, Long.class)
+                    )
+            );
+        }
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Role statistics")
+                .data(shortDtoList)
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                .build();
     }
 
     @Override
     public Response<?> getAllByGroupId(Long groupId) {
-        return null;
+        Groups group = groupsRepository.findById(groupId)
+                .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + groupId));
+        List<AuthUser> authUsers = authUserRepository.findAllByGroupId(groupId);
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("AuthUser successfully found by group id")
+                .data(userMapper.dtoList(authUsers))
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                .build();
     }
 
     @Override
