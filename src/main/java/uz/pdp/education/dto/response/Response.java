@@ -17,8 +17,8 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Response<T> {
     private Integer code;
-    private String message;
     private HttpStatus status;
+    private String message;
     private Boolean success;
     private Map<String, String> errors;
     private Map<String, Object> meta = new HashMap<>();
@@ -26,4 +26,5 @@ public class Response<T> {
     private Long elements;
     private Integer pages;
     private String timestamp;
+    private String path;
 }
