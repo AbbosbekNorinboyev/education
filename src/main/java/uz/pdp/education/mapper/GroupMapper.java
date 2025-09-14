@@ -27,6 +27,7 @@ public class GroupMapper {
                 .name(entity.getName())
                 .subjectId(entity.getSubject() != null ? entity.getSubject().getId() : null)
                 .teacherId(entity.getTeacher() != null ? entity.getTeacher().getId() : null)
+                .price(entity.getPrice())
                 .startDate(entity.getStartDate())
                 .endDate(entity.getEndDate())
                 .status(entity.getStatus())

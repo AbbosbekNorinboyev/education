@@ -11,9 +11,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(
-        info = @Info(version = "2.6.0",
-                description = "API Documentation"),
-        servers = @Server(url = "http://localhost:1189", description = "Local Server"),
+        info = @Info(
+                title = "EDUCATION",
+                version = "2.6.0",
+                description = "It is education CRM system"),
+        servers = @Server(
+                url = "http://localhost:1189",
+                description = "Local Server"),
         security = @SecurityRequirement(name = "bearerAuth")
 )
 @SecurityScheme(
