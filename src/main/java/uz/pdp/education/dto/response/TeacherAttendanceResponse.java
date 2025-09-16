@@ -11,10 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class StudentAttendanceResponse {
+public class TeacherAttendanceResponse {
     private Long id;
+    private Long teacherId;
     private Long groupId;
-    private Long lessonId;
-    private Long studentId;
     private Boolean active;
 }

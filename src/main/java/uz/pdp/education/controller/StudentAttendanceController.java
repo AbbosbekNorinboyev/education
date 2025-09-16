@@ -7,7 +7,7 @@ import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.service.StudentAttendanceService;
 
 @RestController
-@RequestMapping("/api/studentAttendance")
+@RequestMapping("/api/studentAttendances")
 @RequiredArgsConstructor
 public class StudentAttendanceController {
     private final StudentAttendanceService studentAttendanceService;

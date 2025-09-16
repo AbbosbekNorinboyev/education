@@ -45,26 +45,27 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/webjars/**",
                                 "/swagger-ui.html",
-                                "/api/auths/**").permitAll()
+                                "/api/auths/**"
+                        ).permitAll()
                         .anyRequest().authenticated())
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         // 401 Unauthorized
-//                        .authenticationEntryPoint((request, response, authException) -> {
-//                            Response<?> resp = Response.builder()
-//                                    .code(HttpStatus.UNAUTHORIZED.value())
-//                                    .status(HttpStatus.UNAUTHORIZED)
-//                                    .message("Unauthorized login qilishingiz kerak")
-//                                    .success(false)
-//                                    .timestamp(localDateTimeFormatter(LocalDateTime.now()))
-//                                    .build();
-//
-//                            response.setContentType("application/json");
-//                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//                            new ObjectMapper().writeValue(response.getOutputStream(), resp);
-//                        })
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            Response<?> resp = Response.builder()
+                                    .code(HttpStatus.UNAUTHORIZED.value())
+                                    .status(HttpStatus.UNAUTHORIZED)
+                                    .message("Unauthorized login qilishingiz kerak")
+                                    .success(false)
+                                    .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                                    .build();
+
+                            response.setContentType("application/json");
+                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                            new ObjectMapper().writeValue(response.getOutputStream(), resp);
+                        })
                         // 403 Forbidden
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             Response<?> resp = Response.builder()
