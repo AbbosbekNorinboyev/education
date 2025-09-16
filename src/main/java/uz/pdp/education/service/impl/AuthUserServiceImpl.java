@@ -7,8 +7,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.config.CustomUserDetailsService;
-import uz.pdp.education.dto.LoginRequest;
-import uz.pdp.education.dto.RegisterRequest;
+import uz.pdp.education.dto.request.LoginRequest;
+import uz.pdp.education.dto.request.RegisterRequest;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.enums.Role;

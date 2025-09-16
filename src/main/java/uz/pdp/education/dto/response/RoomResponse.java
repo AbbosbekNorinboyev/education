@@ -5,16 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uz.pdp.education.enums.Weeks;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GroupDayResponse {
+public class RoomResponse {
     private Long id;
-    private Weeks weeks;
-    private String groupTime;
-    private Long groupId;
+    private String name;
+    private Integer number;
+    private String description;
+    private Integer capacity;
 }

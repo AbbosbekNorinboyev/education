@@ -1,4 +1,4 @@
-package uz.pdp.education.dto;
+package uz.pdp.education.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
