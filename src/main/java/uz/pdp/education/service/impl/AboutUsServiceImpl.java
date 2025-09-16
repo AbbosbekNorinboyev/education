@@ -9,7 +9,6 @@ import uz.pdp.education.entity.AboutUs;
 import uz.pdp.education.exception.ResourceNotFoundException;
 import uz.pdp.education.mapper.AboutUsMapper;
 import uz.pdp.education.repository.AboutUsRepository;
-import uz.pdp.education.repository.AuthUserRepository;
 import uz.pdp.education.service.AboutUsService;
 
 import java.time.LocalDateTime;
@@ -22,7 +21,6 @@ import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 public class AboutUsServiceImpl implements AboutUsService {
     private final AboutUsMapper aboutUsMapper;
     private final AboutUsRepository aboutUsRepository;
-    private final AuthUserRepository authUserRepository;
 
     @Override
     public Response<?> createUs(AboutUsRequest request) {

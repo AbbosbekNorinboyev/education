@@ -1,7 +1,6 @@
 package uz.pdp.education.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.SubjectDto;
@@ -23,7 +22,6 @@ import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class SubjectServiceImpl implements SubjectService {
     private final AuthUserRepository authUserRepository;
     private final SubjectRepository subjectRepository;
@@ -33,7 +31,6 @@ public class SubjectServiceImpl implements SubjectService {
     public Response<?> createSubject(SubjectDto subjectDto, Long teacherId) {
         Subject subject = subjectMapper.toEntity(subjectDto);
         subjectRepository.save(subject);
-        log.info("Subject successfully created");
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
@@ -48,7 +45,6 @@ public class SubjectServiceImpl implements SubjectService {
     public Response<?> getSubject(Long subjectId) {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectId));
-        log.info("Subject successfully found");
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
@@ -63,7 +59,6 @@ public class SubjectServiceImpl implements SubjectService {
     public Response<?> getAllSubject() {
         List<Subject> subjects = subjectRepository.findAll();
         if (!subjects.isEmpty()) {
-            log.info("Subject list successfully found");
             return Response.builder()
                     .code(HttpStatus.OK.value())
                     .status(HttpStatus.OK)
@@ -73,7 +68,6 @@ public class SubjectServiceImpl implements SubjectService {
                     .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                     .build();
         }
-        log.error("Subject list not found");
         return Response.builder()
                 .code(HttpStatus.NOT_FOUND.value())
                 .status(HttpStatus.NOT_FOUND)
@@ -89,7 +83,6 @@ public class SubjectServiceImpl implements SubjectService {
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectDto.getId()));
         subjectMapper.update(subject, subjectDto);
         subjectRepository.save(subject);
-        log.info("Subject successfully updated");
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)

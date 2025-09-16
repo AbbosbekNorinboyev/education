@@ -2,7 +2,6 @@ package uz.pdp.education.service.impl;
 
 import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,7 +31,6 @@ import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class UserServiceImpl implements UserService {
     private final GroupsRepository groupsRepository;
     private final AuthUserRepository authUserRepository;
@@ -42,7 +40,6 @@ public class UserServiceImpl implements UserService {
     public Response<?> get(Long id) {
         AuthUser authUser = authUserRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("AuthUser not found: " + id));
-        log.info("AuthUser successfully found");
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
@@ -57,7 +54,6 @@ public class UserServiceImpl implements UserService {
     public Response<?> getAll(Pageable pageable) {
         Page<UserDto> users = authUserRepository.findAll(pageable)
                 .map(userMapper::toDto);
-        log.info("AuthUser list successfully found");
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
@@ -73,7 +69,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("AuthUser not found: " + dto.getId()));
         userMapper.update(authUser, dto);
         authUserRepository.save(authUser);
-        log.info("AuthUser successfully updated");
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
@@ -89,7 +84,6 @@ public class UserServiceImpl implements UserService {
                     .message("USER IS NULL")
                     .build();
         }
-        log.info("AuthUser successfully found");
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
