@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 import uz.pdp.education.dto.request.BudgetRequest;
 import uz.pdp.education.dto.response.BudgetResponse;
 import uz.pdp.education.entity.Budget;
+import uz.pdp.education.enums.BudgetType;
+import uz.pdp.education.repository.BudgetRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,5 +45,14 @@ public class BudgetMapper {
         if (request.getAmount() != null) {
             entity.setAmount(request.getAmount());
         }
+    }
+
+    public void addBudget(String description, BudgetType budgetType,
+                          Double balance, BudgetRepository budgetRepository) {
+        Budget budget = new Budget();
+        budget.setBudgetType(budgetType);
+        budget.setAmount(balance);
+        budget.setDescription(description);
+        budgetRepository.save(budget);
     }
 }
