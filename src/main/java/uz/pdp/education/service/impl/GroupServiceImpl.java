@@ -1,5 +1,10 @@
 package uz.pdp.education.service.impl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,6 +22,7 @@ import uz.pdp.education.repository.SubjectRepository;
 import uz.pdp.education.service.GroupService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static uz.pdp.education.utils.Util.localDateTimeFormatter;
@@ -28,6 +34,7 @@ public class GroupServiceImpl implements GroupService {
     private final AuthUserRepository authUserRepository;
     private final GroupsRepository groupsRepository;
     private final GroupMapper groupMapper;
+    private final EntityManager entityManager;
 
     @Override
     public Response<?> createGroup(GroupRequest groupRequest) {
@@ -157,6 +164,37 @@ public class GroupServiceImpl implements GroupService {
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .message("Group list successfully found by support teacher id")
+                .success(true)
+                .data(groupMapper.dtoList(groups))
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                .build();
+    }
+
+    @Override
+    public Response<?> filter(Long groupId, Long subjectId, Long teacherId) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Groups> criteriaQuery = criteriaBuilder.createQuery(Groups.class);
+        Root<Groups> root = criteriaQuery.from(Groups.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (groupId != null) {
+            predicates.add(criteriaBuilder.equal(root.get("id"), groupId));
+        }
+        if (subjectId != null) {
+            predicates.add(criteriaBuilder.equal(root.get("subject").get("id"), subjectId));
+        }
+        if (teacherId != null) {
+            predicates.add(criteriaBuilder.equal(root.get("teacher").get("id"), teacherId));
+        }
+
+        criteriaQuery.select(root).where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+
+        List<Groups> groups = entityManager.createQuery(criteriaQuery).getResultList();
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Group list successfully found filter by teacher and subject")
                 .success(true)
                 .data(groupMapper.dtoList(groups))
                 .timestamp(localDateTimeFormatter(LocalDateTime.now()))

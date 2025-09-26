@@ -1,4 +1,4 @@
-package uz.pdp.education.config;
+package uz.pdp.education.aspect;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
@@ -19,8 +19,11 @@ public class AuditorAwareImpl implements AuditorAware<Long> {
             return Optional.empty();
         }
 
+        Object principal = authentication.getPrincipal();
         // 👇 UserDetails dan ID olish
-        AuthUser userDetails = (AuthUser) authentication.getPrincipal();
-        return Optional.ofNullable(userDetails.getId());  // foydalanuvchi ID
+        if (principal instanceof AuthUser authUser) {
+            return Optional.ofNullable(authUser.getId());  // foydalanuvchi ID
+        }
+        return Optional.empty(); // principal AuthUser emas bo‘lsa
     }
 }

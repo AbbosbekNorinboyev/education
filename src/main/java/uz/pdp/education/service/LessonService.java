@@ -15,4 +15,6 @@ public interface LessonService {
     Response<?> deleteLesson(Long id);
 
     Response<?> getLessonsByGroupId(Long groupId);
+
+    Response<?> filter(Long groupId, String title, String description);
 }

@@ -1,4 +1,4 @@
-package uz.pdp.education.config;
+package uz.pdp.education.aspect;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

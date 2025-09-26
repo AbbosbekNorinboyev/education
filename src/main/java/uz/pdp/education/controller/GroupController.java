@@ -48,4 +48,11 @@ public class GroupController {
     public Response<?> getGroupsBySupportTeacherId(@RequestParam Long supportTeacherId) {
         return groupService.getGroupsBySupportTeacherId(supportTeacherId);
     }
+
+    @GetMapping("/filter")
+    public Response<?> filter(@RequestParam(required = false) Long groupId,
+                              @RequestParam(required = false) Long subjectId,
+                              @RequestParam(required = false) Long teacherId) {
+        return groupService.filter(groupId, subjectId, teacherId);
+    }
 }

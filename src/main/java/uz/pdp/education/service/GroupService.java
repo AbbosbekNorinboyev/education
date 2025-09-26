@@ -17,4 +17,6 @@ public interface GroupService {
     Response<?> getGroupsSubjectId(Long subjectId);
 
     Response<?> getGroupsBySupportTeacherId(Long supportTeacherId);
+
+    Response<?> filter(Long groupId, Long subjectId, Long teacherId);
 }

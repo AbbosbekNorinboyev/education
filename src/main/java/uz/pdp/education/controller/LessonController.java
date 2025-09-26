@@ -42,4 +42,11 @@ public class LessonController {
     public Response<?> getLessonsByGroupId(@RequestParam Long groupId) {
         return lessonService.getLessonsByGroupId(groupId);
     }
+
+    @GetMapping("/filter")
+    public Response<?> filter(@RequestParam(required = false) Long groupId,
+                              @RequestParam(required = false) String title,
+                              @RequestParam(required = false) String description) {
+        return lessonService.filter(groupId, title, description);
+    }
 }
