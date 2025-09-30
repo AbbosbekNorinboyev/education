@@ -11,4 +11,6 @@ public interface StudentAttendanceService {
     Response<?> getAll();
 
     Response<?> update(StudentAttendanceRequest request, Long id);
+
+    Response<?> filter(Long groupId, Long lessonId, Long studentId);
 }

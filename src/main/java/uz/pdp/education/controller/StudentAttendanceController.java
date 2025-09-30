@@ -35,4 +35,11 @@ public class StudentAttendanceController {
                               @RequestParam Long id) {
         return studentAttendanceService.update(request, id);
     }
+
+    @GetMapping("/filter")
+    public Response<?> filter(@RequestParam(required = false) Long groupId,
+                              @RequestParam(required = false) Long lessonId,
+                              @RequestParam(required = false) Long studentId) {
+        return studentAttendanceService.filter(groupId, lessonId, studentId);
+    }
 }

@@ -2,7 +2,6 @@ package uz.pdp.education.service;
 
 import uz.pdp.education.dto.request.TeacherAttendanceRequest;
 import uz.pdp.education.dto.response.Response;
-import uz.pdp.education.entity.TeacherAttendance;
 
 public interface TeacherAttendanceService {
     Response<?> create(TeacherAttendanceRequest request, Long groupId, Long teacherId);
@@ -12,4 +11,6 @@ public interface TeacherAttendanceService {
     Response<?> getAll();
 
     Response<?> update(TeacherAttendanceRequest request, Long id);
+
+    Response<?> filter(Long teacherId, Long groupId);
 }
