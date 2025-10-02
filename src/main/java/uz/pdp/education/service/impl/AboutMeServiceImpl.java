@@ -1,6 +1,7 @@
 package uz.pdp.education.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.request.AboutMeRequest;
@@ -65,8 +66,8 @@ public class AboutMeServiceImpl implements AboutMeService {
     }
 
     @Override
-    public Response<?> getAllMe() {
-        List<AboutMe> aboutMes = aboutMeRepository.saveAll(aboutMeRepository.findAll());
+    public Response<?> getAllMe(Pageable pageable) {
+        List<AboutMe> aboutMes = aboutMeRepository.findAll(pageable).getContent();
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)

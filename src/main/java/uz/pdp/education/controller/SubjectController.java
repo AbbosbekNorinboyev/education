@@ -2,6 +2,7 @@ package uz.pdp.education.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.education.dto.SubjectDto;
 import uz.pdp.education.dto.response.Response;
@@ -25,8 +26,9 @@ public class SubjectController {
     }
 
     @GetMapping("/getAll")
-    public Response<?> getAllSubject() {
-        return subjectService.getAllSubject();
+    public Response<?> getAllSubject(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                     @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+        return subjectService.getAllSubject(PageRequest.of(page, size));
     }
 
     @PutMapping("/update")

@@ -1,6 +1,7 @@
 package uz.pdp.education.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.education.dto.request.GroupDayRequest;
 import uz.pdp.education.dto.response.Response;
@@ -23,8 +24,9 @@ public class GroupDayController {
     }
 
     @GetMapping("/getAll")
-    public Response<?> getAllGroupDay() {
-        return groupDayService.getAllGroupDay();
+    public Response<?> getAllGroupDay(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                      @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+        return groupDayService.getAllGroupDay(PageRequest.of(page, size));
     }
 
     @PutMapping("/update")

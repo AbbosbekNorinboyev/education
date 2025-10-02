@@ -1,6 +1,7 @@
 package uz.pdp.education.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.SubjectDto;
@@ -56,8 +57,8 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public Response<?> getAllSubject() {
-        List<Subject> subjects = subjectRepository.findAll();
+    public Response<?> getAllSubject(Pageable pageable) {
+        List<Subject> subjects = subjectRepository.findAll(pageable).getContent();
         if (!subjects.isEmpty()) {
             return Response.builder()
                     .code(HttpStatus.OK.value())

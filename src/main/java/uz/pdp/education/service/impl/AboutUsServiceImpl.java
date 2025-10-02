@@ -1,6 +1,7 @@
 package uz.pdp.education.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.request.AboutUsRequest;
@@ -50,8 +51,8 @@ public class AboutUsServiceImpl implements AboutUsService {
     }
 
     @Override
-    public Response<?> getAllUs() {
-        List<AboutUs> aboutUses = aboutUsRepository.findAll();
+    public Response<?> getAllUs(Pageable pageable) {
+        List<AboutUs> aboutUses = aboutUsRepository.findAll(pageable).getContent();
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)

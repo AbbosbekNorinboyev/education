@@ -1,7 +1,6 @@
 package uz.pdp.education.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,7 @@ import uz.pdp.education.repository.BudgetRepository;
 import uz.pdp.education.service.BudgetService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 
@@ -56,14 +56,13 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public Response<?> getAll(Pageable pageable) {
-        Page<BudgetResponse> budgets = budgetRepository.findAll(pageable)
-                .map(budgetMapper::toResponse);
+        List<Budget> budgets = budgetRepository.findAll(pageable).getContent();
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .success(true)
                 .message("Budget successfully found")
-                .data(budgets.getContent())
+                .data(budgetMapper.responseList(budgets))
                 .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }

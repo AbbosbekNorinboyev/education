@@ -1,5 +1,6 @@
 package uz.pdp.education.service;
 
+import org.springframework.data.domain.Pageable;
 import uz.pdp.education.dto.request.GroupRequest;
 import uz.pdp.education.dto.response.Response;
 
@@ -8,7 +9,7 @@ public interface GroupService {
 
     Response<?> getGroup(Long groupId);
 
-    Response<?> getAllGroup();
+    Response<?> getAllGroup(Pageable pageable);
 
     Response<?> updateGroup(GroupRequest groupRequest, Long groupId);
 

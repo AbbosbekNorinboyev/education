@@ -1,5 +1,6 @@
 package uz.pdp.education.service;
 
+import org.springframework.data.domain.Pageable;
 import uz.pdp.education.dto.request.TeacherAttendanceRequest;
 import uz.pdp.education.dto.response.Response;
 
@@ -8,7 +9,7 @@ public interface TeacherAttendanceService {
 
     Response<?> get(Long id);
 
-    Response<?> getAll();
+    Response<?> getAll(Pageable pageable);
 
     Response<?> update(TeacherAttendanceRequest request, Long id);
 

@@ -83,14 +83,13 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public Response<?> getAll(Pageable pageable) {
-        Page<DiscountResponse> discounts = discountRepository.findAll(pageable)
-                .map(discountMapper::toResponse);
+        List<Discount> discounts = discountRepository.findAll(pageable).getContent();
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .message("Discount list successfully found")
                 .success(true)
-                .data(discounts.getContent())
+                .data(discountMapper.responseList(discounts))
                 .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }

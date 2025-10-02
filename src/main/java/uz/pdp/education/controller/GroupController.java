@@ -2,6 +2,7 @@ package uz.pdp.education.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.education.dto.request.GroupRequest;
 import uz.pdp.education.dto.response.Response;
@@ -24,8 +25,9 @@ public class GroupController {
     }
 
     @GetMapping("/getAll")
-    public Response<?> getAllGroup() {
-        return groupService.getAllGroup();
+    public Response<?> getAllGroup(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                   @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+        return groupService.getAllGroup(PageRequest.of(page, size));
     }
 
     @PutMapping("/update")

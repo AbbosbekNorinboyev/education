@@ -1,5 +1,6 @@
 package uz.pdp.education.service;
 
+import org.springframework.data.domain.Pageable;
 import uz.pdp.education.dto.request.LessonRequest;
 import uz.pdp.education.dto.response.Response;
 
@@ -8,7 +9,7 @@ public interface LessonService {
 
     Response<?> getLesson(Long id);
 
-    Response<?> getAllLesson();
+    Response<?> getAllLesson(Pageable pageable);
 
     Response<?> updateLesson(LessonRequest request, Long id);
 

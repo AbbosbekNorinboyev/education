@@ -6,6 +6,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.request.TeacherAttendanceRequest;
@@ -79,8 +80,8 @@ public class TeacherAttendanceServiceImpl implements TeacherAttendanceService {
     }
 
     @Override
-    public Response<?> getAll() {
-        List<TeacherAttendance> teacherAttendances = teacherAttendanceRepository.findAll();
+    public Response<?> getAll(Pageable pageable) {
+        List<TeacherAttendance> teacherAttendances = teacherAttendanceRepository.findAll(pageable).getContent();
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)

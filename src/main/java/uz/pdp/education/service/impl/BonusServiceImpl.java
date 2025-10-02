@@ -1,12 +1,10 @@
 package uz.pdp.education.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.request.BonusRequest;
-import uz.pdp.education.dto.response.BonusResponse;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.entity.Bonus;
@@ -77,14 +75,13 @@ public class BonusServiceImpl implements BonusService {
 
     @Override
     public Response<?> getAll(Pageable pageable) {
-        Page<BonusResponse> bonusResponses = bonusRepository.findAll(pageable)
-                .map(bonusMapper::toResponse);
+        List<Bonus> bonuses = bonusRepository.findAll(pageable).getContent();
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .success(true)
                 .message("Bonus list successfully found")
-                .data(bonusResponses)
+                .data(bonusMapper.responseList(bonuses))
                 .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }

@@ -6,6 +6,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.request.GroupRequest;
@@ -71,8 +72,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Response<?> getAllGroup() {
-        List<Groups> groups = groupsRepository.findAll();
+    public Response<?> getAllGroup(Pageable pageable) {
+        List<Groups> groups = groupsRepository.findAll(pageable).getContent();
         if (!groups.isEmpty()) {
             return Response.builder()
                     .code(HttpStatus.OK.value())

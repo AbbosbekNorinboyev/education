@@ -1,7 +1,6 @@
 package uz.pdp.education.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import uz.pdp.education.repository.ApiLogRepository;
 import uz.pdp.education.service.ApiLogService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static uz.pdp.education.utils.Util.localDateTimeFormatter;
 
@@ -40,7 +40,7 @@ public class ApiLogServiceImpl implements ApiLogService {
 
     @Override
     public Response<?> getAll(Pageable pageable) {
-        Page<ApiLog> apiLogs = apiLogRepository.findAll(pageable);
+        List<ApiLog> apiLogs = apiLogRepository.findAll(pageable).getContent();
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)

@@ -1,6 +1,7 @@
 package uz.pdp.education.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.request.GroupDayRequest;
@@ -56,8 +57,8 @@ public class GroupDayServiceImpl implements GroupDayService {
     }
 
     @Override
-    public Response<?> getAllGroupDay() {
-        List<GroupDay> groupDays = groupDayRepository.findAll();
+    public Response<?> getAllGroupDay(Pageable pageable) {
+        List<GroupDay> groupDays = groupDayRepository.findAll(pageable).getContent();
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)

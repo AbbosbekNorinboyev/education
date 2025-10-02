@@ -52,13 +52,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response<?> getAll(Pageable pageable) {
-        Page<UserDto> users = authUserRepository.findAll(pageable)
-                .map(userMapper::toDto);
+        List<AuthUser> users = authUserRepository.findAll(pageable).getContent();
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .message("AuthUser list successfully found")
-                .data(users)
+                .data(userMapper.dtoList(users))
                 .timestamp(localDateTimeFormatter(LocalDateTime.now()))
                 .build();
     }

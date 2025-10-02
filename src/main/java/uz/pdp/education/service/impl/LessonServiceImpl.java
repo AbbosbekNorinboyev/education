@@ -6,6 +6,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.education.dto.request.LessonRequest;
@@ -63,8 +64,8 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public Response<?> getAllLesson() {
-        List<Lesson> lessons = lessonRepository.findAll();
+    public Response<?> getAllLesson(Pageable pageable) {
+        List<Lesson> lessons = lessonRepository.findAll(pageable).getContent();
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)

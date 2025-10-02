@@ -1,6 +1,7 @@
 package uz.pdp.education.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.education.dto.request.AboutMeRequest;
 import uz.pdp.education.dto.response.Response;
@@ -23,8 +24,9 @@ public class AboutMeController {
     }
 
     @GetMapping("/getAll")
-    public Response<?> getAllMe() {
-        return aboutMeService.getAllMe();
+    public Response<?> getAllMe(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+        return aboutMeService.getAllMe(PageRequest.of(page, size));
     }
 
     @PutMapping("/update")
