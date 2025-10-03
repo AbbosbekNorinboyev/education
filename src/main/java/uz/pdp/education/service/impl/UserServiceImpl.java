@@ -2,7 +2,6 @@ package uz.pdp.education.service.impl;
 
 import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -118,7 +117,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response<?> getStudentByDateAndGroup(LocalDate localDate, Long groupId) {
-        return null;
+        Long allByCreatedAtAndGroupId = authUserRepository.findAllByCreatedAtAndGroupId(localDate, groupId);
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Successfully found")
+                .data(allByCreatedAtAndGroupId)
+                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                .build();
     }
 
     @Override
@@ -146,7 +152,7 @@ public class UserServiceImpl implements UserService {
     public Response<?> getAllByGroupId(Long groupId) {
         Groups group = groupsRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + groupId));
-        List<AuthUser> authUsers = authUserRepository.findAllByGroupId(groupId);
+        List<AuthUser> authUsers = authUserRepository.findAllByGroupId(group.getId());
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)

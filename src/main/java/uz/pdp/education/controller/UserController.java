@@ -47,7 +47,7 @@ public class UserController {
 
     @GetMapping("/getStudentByDateAndGroup")
     public Response<?> getStudentByDateAndGroup(LocalDate localDate, Long groupId) {
-        return null;
+        return userService.getStudentByDateAndGroup(localDate, groupId);
     }
 
     @GetMapping("/roleStatistics")
