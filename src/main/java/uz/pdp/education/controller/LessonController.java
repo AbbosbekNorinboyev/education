@@ -3,9 +3,12 @@ package uz.pdp.education.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
+import uz.pdp.education.dto.AnswerDto;
 import uz.pdp.education.dto.request.LessonRequest;
 import uz.pdp.education.dto.response.Response;
+import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.service.LessonService;
+import uz.pdp.education.utils.validator.CurrentUser;
 
 @RestController
 @RequestMapping("/api/lessons")
@@ -43,6 +46,19 @@ public class LessonController {
     @GetMapping("/getLessonsByGroupId")
     public Response<?> getLessonsByGroupId(@RequestParam Long groupId) {
         return lessonService.getLessonsByGroupId(groupId);
+    }
+
+    @PostMapping("/submit")
+    public Response<?> submit(@CurrentUser AuthUser user,
+                              @RequestParam("lessonId") Long lessonId,
+                              @RequestBody AnswerDto answerDto) {
+        return lessonService.submit(user, lessonId, answerDto);
+    }
+
+    @GetMapping("/getAllProgressByLessonIdAndUserId")
+    public Response<?> getAllProgressByLessonIdAndUserId(@RequestParam("lessonId") Long lessonId,
+                                                         @RequestParam("userId") Long userId) {
+        return lessonService.getAllProgressByLessonIdAndUserId(lessonId, userId);
     }
 
     @GetMapping("/filter")
