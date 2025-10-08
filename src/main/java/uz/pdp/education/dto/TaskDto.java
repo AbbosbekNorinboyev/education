@@ -1,4 +1,4 @@
-package uz.pdp.education.dto.response;
+package uz.pdp.education.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class LessonResponse {
+public class TaskDto {
     private Long id;
     private String title;
     private String description;
-    private Long groupId;
+    private String fileUrl;
+    private String video;
 }

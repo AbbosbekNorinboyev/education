@@ -6,7 +6,10 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.education.exception.CustomizedRequestException;
 import uz.pdp.education.exception.InvalidHeadersException;
 
@@ -16,11 +19,26 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Set;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class Util {
+    public static String getFileBytes(MultipartFile file) {
+        try {
+            if (file != null && !file.isEmpty()) {
+                byte[] bytes = file.getBytes();
+                return Base64.getEncoder().encodeToString(bytes);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static String convertObjectToJsonString(Object object) {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = null;

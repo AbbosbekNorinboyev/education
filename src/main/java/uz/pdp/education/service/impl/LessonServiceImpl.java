@@ -9,19 +9,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.education.dto.AnswerDto;
-import uz.pdp.education.dto.request.LessonRequest;
+import uz.pdp.education.dto.LessonDto;
+import uz.pdp.education.dto.ResourcesDto;
+import uz.pdp.education.dto.VideoDto;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.*;
 import uz.pdp.education.enums.ProgressStatus;
 import uz.pdp.education.exception.ResourceNotFoundException;
 import uz.pdp.education.mapper.LessonMapper;
 import uz.pdp.education.mapper.ProgressMapper;
+import uz.pdp.education.mapper.ResourceMapper;
+import uz.pdp.education.mapper.VideoMapper;
 import uz.pdp.education.repository.*;
 import uz.pdp.education.service.LessonService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import static uz.pdp.education.utils.Util.localDateTimeFormatter;
@@ -38,21 +44,85 @@ public class LessonServiceImpl implements LessonService {
     private final ProgressMapper progressMapper;
     private final QuestionRepository questionRepository;
     private final OptionsRepository optionsRepository;
+    private final VideoMapper videoMapper;
+    private final VideoRepository videoRepository;
+    private final ResourceMapper resourceMapper;
+    private final ResourceRepository resourceRepository;
+    private final TaskRepository taskRepository;
 
     @Override
-    public Response<?> createLesson(LessonRequest request) {
-        Groups group = groupsRepository.findById(request.getGroupId())
-                .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + request.getGroupId()));
-        Lesson lesson = lessonMapper.toEntity(request);
+    public Response<?> createLesson(LessonDto.LessonCreteDto dto) {
+        Groups group = groupsRepository.findById(dto.getGroupId())
+                .orElseThrow(() -> new ResourceNotFoundException("Group not found: " + dto.getGroupId()));
+        Lesson lesson = lessonMapper.toEntity(dto);
         lesson.setGroup(group);
         lessonRepository.save(lesson);
-        return Response.builder()
-                .code(HttpStatus.OK.value())
-                .status(HttpStatus.OK)
-                .message("Lesson successfully created")
-                .success(true)
-                .timestamp(localDateTimeFormatter(LocalDateTime.now()))
-                .build();
+
+        List<MultipartFile> resources = dto.getResources();
+        List<MultipartFile> videos = dto.getVideos();
+
+        try {
+            if (videos != null && !videos.isEmpty()) {
+                for (MultipartFile file : videos) {
+                    if (file != null && !file.isEmpty()) {
+                        byte[] bytes = file.getBytes();
+                        String imageUrl = Base64.getEncoder().encodeToString(bytes);
+                        VideoDto.VideoCreteDto creteDto = new VideoDto.VideoCreteDto(file);
+                        Video video = videoMapper.toEntity(creteDto);
+                        video.setUrl(imageUrl);
+                        video.setLesson(lesson);
+
+                        videoRepository.save(video);
+                    }
+                }
+            }
+            if (resources != null && !resources.isEmpty()) {
+                for (MultipartFile file : resources) {
+                    if (file != null && !file.isEmpty()) {
+                        ResourcesDto.ResourcesCreteDto creteDto = new ResourcesDto.ResourcesCreteDto(
+                                file.getContentType(), file
+                        );
+                        byte[] bytes = file.getBytes();
+                        String imageUrl = Base64.getEncoder().encodeToString(bytes);
+                        Resources resource = resourceMapper.toEntity(creteDto);
+                        resource.setUrl(imageUrl);
+                        resource.setLesson(lesson);
+
+                        resourceRepository.save(resource);
+                    }
+                }
+            }
+            Task task = new Task();
+            task.setDescription(dto.getTaskDescription());
+            task.setTitle(dto.getTaskTitle());
+            task.setLesson(lesson);
+            if (dto.getTaskFile() != null && !dto.getTaskFile().isEmpty()) {
+                byte[] bytes = dto.getTaskFile().getBytes();
+                String fileUrl = Base64.getEncoder().encodeToString(bytes);
+                task.setFileUrl(fileUrl);
+            }
+            if (dto.getTaskVideo() != null && !dto.getTaskVideo().isEmpty()) {
+                byte[] bytes = dto.getTaskVideo().getBytes();
+                String video = Base64.getEncoder().encodeToString(bytes);
+                task.setVideo(video);
+            }
+            taskRepository.save(task);
+            return Response.builder()
+                    .code(HttpStatus.OK.value())
+                    .status(HttpStatus.OK)
+                    .message("Lesson successfully created")
+                    .success(true)
+                    .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                    .build();
+        } catch (Exception e) {
+            return Response.builder()
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .message(e.getMessage())
+                    .success(false)
+                    .timestamp(localDateTimeFormatter(LocalDateTime.now()))
+                    .build();
+        }
     }
 
     @Override
@@ -83,7 +153,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public Response<?> updateLesson(LessonRequest request, Long id) {
+    public Response<?> updateLesson(LessonDto.LessonCreteDto request, Long id) {
         Lesson lesson = lessonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson not found: " + id));
         lessonMapper.update(lesson, request);

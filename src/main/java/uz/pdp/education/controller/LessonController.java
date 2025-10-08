@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.education.dto.AnswerDto;
-import uz.pdp.education.dto.request.LessonRequest;
+import uz.pdp.education.dto.LessonDto;
 import uz.pdp.education.dto.response.Response;
 import uz.pdp.education.entity.AuthUser;
 import uz.pdp.education.service.LessonService;
@@ -17,8 +17,8 @@ public class LessonController {
     private final LessonService lessonService;
 
     @PostMapping("/create")
-    public Response<?> createLesson(@RequestBody LessonRequest request) {
-        return lessonService.createLesson(request);
+    public Response<?> createLesson(@RequestBody LessonDto.LessonCreteDto dto) {
+        return lessonService.createLesson(dto);
     }
 
     @GetMapping("/get")
@@ -33,7 +33,7 @@ public class LessonController {
     }
 
     @PutMapping("/update")
-    public Response<?> updateLesson(@RequestBody LessonRequest request,
+    public Response<?> updateLesson(@RequestBody LessonDto.LessonCreteDto request,
                                     @RequestParam Long id) {
         return lessonService.updateLesson(request, id);
     }
