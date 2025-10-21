@@ -45,7 +45,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/webjars/**",
                                 "/swagger-ui.html",
-                                "/api/auths/**"
+                                "/api/auths/**",
+                                "/actuator/**"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
